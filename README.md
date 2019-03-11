@@ -2,7 +2,7 @@
 
 ## Please cite our work -- (citation)
 
-## Awesome Logo 
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/unc_hackathon_2019.png?raw=true "Title")
 
 ## An Indexing System for All Public RNAseq Data.  An Attached User Interface!
 
