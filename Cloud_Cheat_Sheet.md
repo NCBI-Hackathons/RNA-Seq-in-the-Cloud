@@ -72,21 +72,18 @@ For access to GitHub and Hackathon Servers, you'll need an _ssh key_.
     ```
     Waiting on bqjob_r2257ca5f589030fa_000001681a2c36ac_1 ... (0s)
     Current status: DONE  
-+------------------------+
-|    LibrarySelection    |
-+------------------------+
-| RANDOM                 |
-| ChIP                   |
-| PolyA                  |
-| other                  |
-| DNase                  |
-| cDNA                   |
-| size fractionation     |
-| CAGE                   |
-| Reduced Representation |
-| unspecified            |
-| Hybrid Selection       |
-+------------------------+
+LibrarySelection
+RANDOM
+ChIP
+PolyA
+other
+DNase
+cDNA
+size fractionation
+CAGE
+Reduced Representation
+unspecified
+Hybrid Selection
     ```
 > *Note*: Only the k-mer-based taxa with the most number of hits is reported, and only the blast hit with the highest bitscore is reported.
 > Thus, most SRR+Contig pairs are unique, but some still appear more than once if there is a tie for kmer hits and/or blast bitscore (in these cases, the specific combination of blast hit and kmer hit isn’t meaningful)
