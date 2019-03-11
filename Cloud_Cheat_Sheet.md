@@ -26,6 +26,7 @@ For access to GitHub and Hackathon Servers, you'll need an _ssh key_.
 |Data               |Location     |
 |-------------------|--------------|
 |SRA alignments| `gs://ncbi_sra_rnaseq/*.bam`|
+| Counts | `gs://ncbi_sra_rnaseq/genecounts/*.genecounts` |
 |Contig FASTAs| `gs://ncbi_sra_rnaseq/*.contigs.fa/`|
 |BigQuery Tables|project: `strides-sra-hackathon-data` <br/>table: `rnaseq.genescounts`, `rnaseq.runinfo` <br>project: `strides-sra-hackathon-data`<br/>table: various, see 4a TODO: [below](#)|
 |Server information| Refer to the pinned post Slack (`#help-desk` channel)|
