@@ -41,7 +41,7 @@ For access to GitHub and Hackathon Servers, you'll need an _ssh key_.
         
 * Search data pre-indexed by NCBI
             
-  * *Query format*: `bq --project_id strides-sra-hackathon-ops query --nouse_legacy_sql`
+  * *Query format*: `bq --project_id strides-sra-hackathon-data query --nouse_legacy_sql`
                 
     > In some case you may need to use `strides-sra-hackathon-data`, more on this below
             
@@ -49,7 +49,7 @@ For access to GitHub and Hackathon Servers, you'll need an _ssh key_.
     ```
     bq --max_rows=100 
        --format=pretty 
-       --project_id strides-sra-hackathon-ops query     
+       --project_id strides-sra-hackathon-data query     
        --nouse_legacy_sql "<your_standard_sql_query_here"
        ```
 
@@ -57,36 +57,36 @@ For access to GitHub and Hackathon Servers, you'll need an _ssh key_.
             
 
 * *Available data*:
-    `bq show --schema --format=prettyjson strides-sra-hackathon-ops:ncbi_sra_realign.hackathon_data`
+    `bq show --schema --format=prettyjson strides-sra-hackathon-data:rnaseq.runinfo`
 
 > Format also accepts “json”
 
 * *Example query*: to get a list of library selection strategies used by included SRRs:
     ```   
-    bq --format=csv --project_id strides-sra-hackathon-ops query
+    bq --format=csv --project_id strides-sra-hackathon-data query
        --nouse_legacy_sql 
-         "select distinct library_selection from ncbi_sra_realign.hackathon_data"  
+         "select distinct LibrarySelection from rnaseq.runinfo"  
     ```
 
 * > Expected Output:**
     ```
     Waiting on bqjob_r2257ca5f589030fa_000001681a2c36ac_1 ... (0s)
     Current status: DONE  
-    library_selection  
-    RANDOM PCR  
-    RANDOM  
-    size fractionation  
-    MDA  
-    other  
-    unspecified  
-    MSLL  
-    Restriction Digest  
-    DNase  
-    Hybrid Selection  
-    ChIP  
-    RT-PCR  
-    Reduced Representation  
-    MBD2 protein methyl-CpG binding domain**
++------------------------+
+|    LibrarySelection    |
++------------------------+
+| RANDOM                 |
+| ChIP                   |
+| PolyA                  |
+| other                  |
+| DNase                  |
+| cDNA                   |
+| size fractionation     |
+| CAGE                   |
+| Reduced Representation |
+| unspecified            |
+| Hybrid Selection       |
++------------------------+
     ```
 > *Note*: Only the k-mer-based taxa with the most number of hits is reported, and only the blast hit with the highest bitscore is reported.
 > Thus, most SRR+Contig pairs are unique, but some still appear more than once if there is a tie for kmer hits and/or blast bitscore (in these cases, the specific combination of blast hit and kmer hit isn’t meaningful)
