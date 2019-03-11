@@ -85,14 +85,6 @@ Reduced Representation
 unspecified
 Hybrid Selection
     ```
-> *Note*: Only the k-mer-based taxa with the most number of hits is reported, and only the blast hit with the highest bitscore is reported.
-> Thus, most SRR+Contig pairs are unique, but some still appear more than once if there is a tie for kmer hits and/or blast bitscore (in these cases, the specific combination of blast hit and kmer hit isn’t meaningful)
-        
-* **If you need to see all the kmer hits or blast hits** use project `strides-sra-hackathon-data` and table `ncbi_sra_realign.taxonomy` or `ncbi_sra_realign.viralblast`
-    
-> **Contigs without any blast hits are not included** in this table
-        
-* If you would like to compare against a complete list of contigs please use project   `strides-sra-hackathon-data` and table `ncbi_sra_realign.coverage`.
     
 * If you have a complex query you are interested in, especially if you think it might involve tables in `strides-sra-hackathon-data`, please let us know if we can help in the TODO: `#help-desk` Slack Channel.
 
