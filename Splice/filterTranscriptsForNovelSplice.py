@@ -30,7 +30,7 @@ exonTxH = {}
 
 
 #################### FUNCTIONS ###############################################
-def examineInternalExons(data):
+def examineRetainedIntrons(data):
     return data
 
 def writeOutFile(tsvOut):
@@ -63,14 +63,6 @@ with open("sample.500.gtf",'r') as g:
                 else:
                     exonTxH[exonKey] = []
                     exonTxH[exonKey].append(tx_id)
-                examineInternalExons(row)
+                examineRetainedIntrons(row)
 
             #rejectTx.append(row) 
-
-
-
-
-
-
-
-
