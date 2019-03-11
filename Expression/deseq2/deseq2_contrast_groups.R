@@ -1,29 +1,49 @@
 library(DESeq2)
 
-# Set paths for two dataframes created by Tomer
+############################################
+###### Set paths and load 2 dataframes #####
+############################################
+
+# cluster jmcgirr@aa-rnaseq-clustering
+# Set paths for two dataframes created by Tommer
 # 1. read counts for each comparable run
-counts_path <- ""
+counts_path <- "/home/tommerschwarz/data/ERP000546_genecounts.txt"
 #
 # 2. attributes for each run
-atts_path <- ""
+atts_path <- "/home/tommerschwarz/data/ERP000546_attributes.txt"
+#
+# Set output path for PCA plots, log fold-change tables, normalized counts
+
+# local
+#counts_path <- "C:/Users/jmcgirr/Documents/GitHub/RNA-Seq-in-the-Cloud/Expression/deseq2/data/ERP000546_genecounts.txt"
+#atts_path <- "C:/Users/jmcgirr/Documents/GitHub/RNA-Seq-in-the-Cloud/Expression/deseq2/data/ERP000546_attributes.txt"
 
 # Set column in attribute(s) file to include in DESeq objects
-design <- 
+design <- "type"
 
 # What groups do we want to compare?
-# i.e. which column in the attributes should be compared?
-att_cols <- c("")
-group1s <- c("")
-group2s <- c("")
+# Which column in the attributes should be compared?
+att_cols <- c("type")
+group1s <- c("a")
+group2s <- c("b")
 
+############################################
+###### Create DESeq2 object and run ########
+############################################
 
 counts <- read.table(counts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+rownames(counts) <- counts[,1]
+counts <- counts[,-1]
 atts <- read.table(atts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+atts <-as.matrix(read.table(atts_path ,header = TRUE,row.names=1))
+
+ncol(counts)
+nrow(atts)
 
 # create DESeq Object
-dds <- DESeqDataSetFromMatrix(countData = cts,
+dds <- DESeqDataSetFromMatrix(countData = counts,
                               colData = atts,
-                              design= design)
+                              design= ~type)
 
 dds <- estimateSizeFactors(dds)
 idx <- rowSums(counts(dds, normalized=TRUE) >= 2 ) >= 2
@@ -31,28 +51,40 @@ dds <- dds[idx,]
 dds <- DESeq(dds)
 rld <- vst(dds)
 
-for (i in c(1:length(att_col)))
+i <- 1
+for (i in c(1:length(att_cols)))
 {
 att_cols[i]
 group1s[i]
 group2s[i]
   
 # contrast groups
-results(dds, contrast=c(att_cols[i],
-                        group1s[i],
-                        group2s[i]))
+res <- results(dds, contrast=c(att_cols[i],group1s[i],group2s[i]))
+#results(dds, contrast=c(att_cols[i]))
 
-#rld.sub <- rld[ , rld$stage %in% c("8dpf") ]
-plotPCA(rld, intgroup=c(att_cols[i]))+theme_bw()
+pca_plot <- plotPCA(rld, intgroup=c(att_cols[i]))
 
-pcaData <- plotPCA(rld, intgroup=c(att_cols[i]), returnData=TRUE)
-percentVar <- round(100 * attr(pcaData, "percentVar"))
-p1 <- ggplot(pcaData, aes(PC1, PC2, color=att_cols[i])) +
-  geom_point(size=3) +
-  xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
-  coord_fixed()+theme_bw()+scale_shape_manual(values=c(17, 16))
-#tiff("pca.tiff", width = 6, height = 6, units = 'in', res = 1000)
-p1 
+#tiff(paste(out_path,"pca.tiff",sep = ""), width = 6, height = 6, units = 'in', res = 500)
+print(pca_plot)
 #dev.off()
+
+resOrdered <- res[order(res$padj),]
+res_ordered <- as.data.frame(resOrdered)
+res_ordered$geneID <- rownames(res_ordered)
+print(head(resOrdered))
+
+#resLFC <- lfcShrink(dds, coef=2, res=res)
+
+total_genes <- nrow(res_ordered)
+de_total <- nrow(res_ordered[which(res_ordered$padj < 0.05),])
+de_up <- (nrow(res_ordered[which(res_ordered$log2FoldChange > 0 & res_ordered$padj < 0.05),]))/total_genes
+de_dn <- (nrow(res_ordered[which(res_ordered$log2FoldChange < 0 & res_ordered$padj < 0.05),]))/total_genes
+prop_de <- de_total/total_genes
+total_genes_plot <- paste(total_genes, "genes", sep = " ")
+
+ma_plot <- plotMA(res, colSig = "darkred", colNonSig = "grey")
+#tiff(paste(out_path,"de_plot.tiff"sep = ""), width = 3.5, height = 3.5, units = 'in', res = 500)
+print(ma_plot)
+#dev.off()
+
 }
