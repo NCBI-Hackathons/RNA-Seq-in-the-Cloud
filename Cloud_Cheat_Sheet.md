@@ -32,6 +32,11 @@ For access to GitHub and Hackathon Servers, you'll need an _ssh key_.
 |Server information| Refer to the pinned post Slack (`#help-desk` channel)|
 |Additional Tools|`gs://ncbi_hackathon_aux_tools/`|
 
+## How the data was generated
+We start with SRA run data pulled from NCBI and align it with hisat2 onto gs://ncbi_sra_rnaseq/refs/GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.*.ht2
+Unmapped reads then are assembled using skesa into denovo contigs and aligned with hisat2 onto the contigs. The merged BAM file is stored on the bucket. 
+BAM files are sorted and indexed, for each BAM there is a flagstat and counts files. The counts are also stored in the BigQuery table rnaseq.genescounts.
+
 ## General GCP Advice
     
 ### BigQuery (a.k.a bq)
