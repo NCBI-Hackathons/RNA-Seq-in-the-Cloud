@@ -12,7 +12,7 @@
 
 #### Software Workflow Diagram 
 
-(placehold with picture of chalkboard for now)
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/IMG_20190311_105938266.jpg?raw=true "Title")
 
 # Installation options:
 
