@@ -100,19 +100,19 @@ Hybrid Selection
 
       `gsutil ls -l`
 
-      `gs://ncbi_sra_realign/SRR11587*.realign`
+      `gs://ncbi_sra_rnaseq/DRR016694*.bam`
         
-    * Copy a file from the realign bucket to the current directory: 
+    * Copy a file from the bucket to the current directory: 
     
-      `gsutil cp gs://ncbi_sra_realign/SRR1158703.realign .`
+      `gsutil cp gs://ncbi_sra_rnaseq/DRR016694.bam .`
         
     * Stream a file:
 
-      `gsutil cat gs://ncbi_sra_realign/SRR1158703.coverage | less`
+      `gsutil cat gs://ncbi_sra_rnaseq/DRR016694.flagstat | less`
         
-    * Copy multiple files from the realign bucket:
+    * Copy multiple files from the bucket:
 
-      `gsutil -m cp gs://ncbi_sra_realign/SRR11587\*.realign .`
+      `gsutil -m cp gs://ncbi_sra_rnaseq/DRR01669\*.bam .`
     
 
 > Tip: To copy data between servers, 
