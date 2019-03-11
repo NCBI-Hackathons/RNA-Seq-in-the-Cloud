@@ -31,7 +31,7 @@ The Docker image contains <this software> as well as a webserver and FTP server 
 
 ### Metadata Binning Workflow
 
-![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Metadata/DataSetQuery.pdf?raw=true "Title")
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Metadata/DataSetQuery.jpg?raw=true "Title")
 
 ### GANs for Synthetic Data Expansion
 
@@ -47,4 +47,4 @@ The Docker image contains <this software> as well as a webserver and FTP server 
 
 ### Splice-it-Up! (Detection and Validation of Novel Exons from Raw Data)
 
-![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Splice/novel_splice_sites.pdf?raw=true "Title")
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Splice/novel_splice_sites.jpg?raw=true "Title")
