@@ -25,10 +25,9 @@ For access to GitHub and Hackathon Servers, you'll need an _ssh key_.
 
 |Data               |Location     |
 |-------------------|--------------|
-|SRA Realign Objects| `/data/realign/` or `gs://ncbi_sra_realign/`|
-|Contig FASTAs|`/data/testset_contigs/` or `gs://ncbi_sra_contigs/`|
-|BLAST DBs|`/blast/blastdb/` |
-|BigQuery Tables|project: `strides-sra-hackathon-ops` <br/>table: `ncbi_sra_realign.hackathon_data` <br>project: `strides-sra-hackathon-data`<br/>table: various, see 4a TODO: [below](#)|
+|SRA alignments| `gs://ncbi_sra_rnaseq/*.bam`|
+|Contig FASTAs| `gs://ncbi_sra_rnaseq/*.contigs.fa/`|
+|BigQuery Tables|project: `strides-sra-hackathon-data` <br/>table: `ncbi_sra_rnaseq.genescounts` <br>project: `strides-sra-hackathon-data`<br/>table: various, see 4a TODO: [below](#)|
 |Server information| Refer to the pinned post Slack (`#help-desk` channel)|
 |Additional Tools|`gs://ncbi_hackathon_aux_tools/`|
 
