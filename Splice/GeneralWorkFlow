@@ -1,0 +1,19 @@
+General Workflow:
+
+Main Idea: Detection of Novel Transcripts in RNA Seq Data
+
+Programming Language: Python
+
+1. Input: .gtf annotation file
+
+2. Filtering on .gtf to remove implausable transcripts (tx)
+  i. (NL's portion)
+    a. remove all tx with less than 1 intron (intronless tx) *
+    b. remove external exons (remove tx with exons which overlap with introns that do not belong to a known promotor region)
+    c. remove txs with retained introns
+
+ ii. * Novel Tx with TSS suport (Maggie)
+ iii. * Intron Structure in AlignDB (IJ)
+
+ 3. Output tsv file with four columns (All)
+    Chromosome, Start of Exon coordinates, Stop of Exon coordinates, Strand (anti or not)
