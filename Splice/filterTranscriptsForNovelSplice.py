@@ -25,6 +25,7 @@ import pandas as pd
 #define important variables and arrays/dictionaries
 
 gtf = []
+knownTx = []
 #rejectTx = [] ## store rejected transcripts with less than 2 introns
 exonTxH = {}
 exonKey = "NaN"
@@ -52,10 +53,10 @@ with open("sample.500.gtf",'r') as g:
             continue
         if tx[2] == "transcript":
             if exonTxH.get(exonKey,0) != 0 and exonCount > 1:
-                print(exonKey)
                 exonTxH.popitem()
                 exonCount = 0
         if any("reference_id" in attr for attr in tx[8].split(";")): #filter known tx
+            knownTx.append("{0},{1},{2},{3}".format(tx[0],tx[3],tx[4],tx[6]))
             continue
         if tx[2] == "exon":
             if not any("1" in exNum for exNum in tx[8].split(";")[2]): #filter for less than 2 introns and remove first exon
