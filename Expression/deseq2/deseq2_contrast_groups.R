@@ -39,7 +39,13 @@ atts_path <- opt$attributes
 #
 # Set output path for PCA plots, log fold-change tables, normalized counts
 out_path <- opt$outdir
-#
+
+show.warnings=FALSE
+dir.create(out_path)
+show.warnings=TRUE
+
+setwd(out_path)
+
 # Set project names
 proj1 <- "ERP003613"
 proj2 <- "ERP000546"
@@ -102,7 +108,7 @@ norm_cts <- data.frame(counts(dds, normalized=TRUE))
 norm_cts$geneID <- rownames(norm_cts)
 final_results <- merge(res_ordered,norm_cts, by = c("geneID"))
 
-write.table(final_results,paste(group1s[i],"_vs_",group2s[i],"results.txt",sep=""), sep = "\t", quote = FALSE, row.names = FALSE)
+write.table(final_results,paste(group1s[i],"_vs_",group2s[i],"_results.txt",sep=""), sep = "\t", quote = FALSE, row.names = FALSE)
 }
 
 
