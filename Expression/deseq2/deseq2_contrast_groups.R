@@ -1,4 +1,3 @@
-library(DESeq2)
 
 
 suppressPackageStartupMessages(library(optparse))
@@ -22,6 +21,8 @@ option_list <- list (
 opt  <- parse_args(OptionParser(#usage= "usage: %prog [options]",
                                 option_list=option_list)
                    )
+
+suppressPackageStartupMessages(library(DESeq2))
 
 ############################################
 ###### Set paths and load 2 dataframes #####
