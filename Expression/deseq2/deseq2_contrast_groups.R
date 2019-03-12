@@ -39,22 +39,15 @@ atts_path <- opt$attributes
 # Set output path for PCA plots, log fold-change tables, normalized counts
 out_path <- opt$outdir
 #
-# Set project names
-proj1 <- "ERP003613"
-proj2 <- "ERP000546"
-
-# local
-#counts_path <- "C:/Users/jmcgirr/Documents/GitHub/RNA-Seq-in-the-Cloud/Expression/deseq2/data/ERP000546_genecounts.txt"
-#atts_path <- "C:/Users/jmcgirr/Documents/GitHub/RNA-Seq-in-the-Cloud/Expression/deseq2/data/ERP000546_attributes.txt"
 
 # Set column in attribute(s) file to include in DESeq objects
 design <- "type"
 
 # What groups do we want to compare?
 # Which column in the attributes should be compared?
-att_cols <- c("type")
-group1s <- c("a")
-group2s <- c("b")
+att_cols <- c("organism_part")
+group1s <- c("appendix")
+group2s <- c("colon")
 
 #####
 ############################################
@@ -73,7 +66,7 @@ nrow(atts)
 # create DESeq Object
 dds <- DESeqDataSetFromMatrix(countData = counts,
                               colData = atts,
-                              design= ~type)
+                              design= ~organism_part)
 
 dds <- estimateSizeFactors(dds)
 idx <- rowSums(counts(dds, normalized=TRUE) >= 2 ) >= 2
@@ -81,7 +74,6 @@ dds <- dds[idx,]
 dds <- DESeq(dds)
 rld <- vst(dds)
 
-i <- 1
 for (i in c(1:length(att_cols)))
 {
 att_cols[i]
