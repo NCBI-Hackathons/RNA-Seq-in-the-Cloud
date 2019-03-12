@@ -10,7 +10,10 @@ outfile = sys.argv[2]
 
 with open(infile, 'rt') as fi, open(outfile, 'wt') as fo:
     tblin = csv.reader(fi, delimiter = '\t')
-    tblout = csv.writer(fo, delimiter = '\t', lineterminator = os.linesep)
+    tblout = csv.writer(fo,
+            delimiter = '\t',
+            lineterminator = os.linesep,
+            quotechar = '\xb6' )
     for line in tblin:
         if not line[0].startswith('#'):
             if 'reference_id' not in line[8]:
