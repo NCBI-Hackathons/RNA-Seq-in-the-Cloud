@@ -179,7 +179,7 @@ class RandomWeightedAverage(_Merge):
         self.BATCH_SIZE = BATCH_SIZE
         
     def _merge_function(self, inputs):
-        weights = K.random_uniform((self.BATCH_SIZE, 1, 1, 1))
+        weights = K.random_uniform((self.BATCH_SIZE, 1))
         return (weights * inputs[0]) + ((1 - weights) * inputs[1])
 
 
@@ -208,7 +208,7 @@ def plotLosses(output_dir, dLosses, gLosses, epoch):
     plt.savefig(output_dir + "/images/gan_loss_epoch_" + str(epoch) + ".png")
 
     
-def train(n_epochs, BATCH_SIZE, TRAINING_RATIO, input_file, output_dir):
+def train(n_epochs, TRAINING_RATIO, BATCH_SIZE, input_file, output_dir):
     # First we load the expression data
     X_train = load_data(input_file)
 
@@ -298,7 +298,6 @@ def train(n_epochs, BATCH_SIZE, TRAINING_RATIO, input_file, output_dir):
     negative_y = -positive_y
     dummy_y = np.zeros((BATCH_SIZE, 1), dtype=np.float32)
 
-
     for epoch in range(n_epochs):
         np.random.shuffle(X_train)
         print("Epoch: ", epoch)
@@ -307,8 +306,7 @@ def train(n_epochs, BATCH_SIZE, TRAINING_RATIO, input_file, output_dir):
         generator_loss = []
         minibatches_size = BATCH_SIZE * TRAINING_RATIO
         for i in range(int(X_train.shape[0] // (BATCH_SIZE * TRAINING_RATIO))):
-            discriminator_minibatches = X_train[i * minibatches_size:
-                                                (i + 1) * minibatches_size]
+            discriminator_minibatches = X_train[np.random.randint(0, X_train.shape[0], size=minibatches_size)]
             for j in range(TRAINING_RATIO):
                 image_batch = discriminator_minibatches[j * BATCH_SIZE:
                                                         (j + 1) * BATCH_SIZE]
@@ -318,8 +316,8 @@ def train(n_epochs, BATCH_SIZE, TRAINING_RATIO, input_file, output_dir):
                     [positive_y, negative_y, dummy_y])
                 discriminator_loss.append(d_loss[0])
                 g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE,
-                                                                                    random_dim),
-                                                                     positive_y)
+                                                        random_dim),
+                                                        positive_y)
                 generator_loss.append(g_loss[0])
                 # Still needs some code to display losses from the generator and discriminator,
                 # progress bars, etc.

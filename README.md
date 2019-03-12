@@ -39,12 +39,12 @@ The Docker image contains <this software> as well as a webserver and FTP server 
 
 ### Visualization of RNAseq Analyses
 
-![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Visualization/workflow.PNG?raw=true "Title")
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Visualization/3D_pca.PNG?raw=true "Title")
 
 ### Simple Expression Analysis
 
-![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Expression/cluster_group_workflow.png?raw=true "Title")
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Expression/progress_report.png?raw=true "Title")
 
 ### Splice-it-Up! (Detection and Validation of Novel Exons from Raw Data)
 
-![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/novel_splice_sites.jpg?raw=true "Title")
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Screen%20Shot%202019-03-12%20at%202.56.15%20PM.png?raw=true "Title")
