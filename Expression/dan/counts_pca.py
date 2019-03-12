@@ -21,8 +21,8 @@ parser.add_argument('--review', action='store_true',
 args = parser.parse_args()
 
 data = pd.read_csv(args.df, sep='\t', index_col=0)
-if args.md:
-    meta_data = pd.read_csv(args.md,sep='\t',index_col='Run')
+
+meta_data = pd.read_csv(args.md,sep='\t',index_col='Run')
 
 if len(data.columns) > 2:
     data_normcounts = data/data.sum()
