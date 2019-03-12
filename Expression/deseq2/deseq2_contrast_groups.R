@@ -46,10 +46,6 @@ show.warnings=TRUE
 
 setwd(out_path)
 
-# Set project names
-proj1 <- "ERP003613"
-proj2 <- "ERP000546"
-
 # local
 #counts_path <- "C:/Users/jmcgirr/Documents/GitHub/RNA-Seq-in-the-Cloud/Expression/deseq2/data/ERP000546_genecounts.txt"
 #atts_path <- "C:/Users/jmcgirr/Documents/GitHub/RNA-Seq-in-the-Cloud/Expression/deseq2/data/ERP000546_attributes.txt"
@@ -72,7 +68,7 @@ atts <-as.matrix(read.table(atts_path ,header = TRUE,row.names=1, sep = "\t"))
 
 ncol(counts)
 nrow(atts)
-paste0(att_cols)
+
 # create DESeq Object
 dds <- DESeqDataSetFromMatrix(countData = counts,
                               colData = atts,
