@@ -1,12 +1,11 @@
-## Create fake data
+##Identify Case and Control Samples in RNA-seq data using metadata
+
+Search term can be a disease or condition e.g. melanoma, breast cancer
+
+This python (v3.6) script is available in a Docker container which holds a Jupyter notebook.
+
 ```bash
-python create_fake_data.py 
+
 ```
 
-## Find runs with a term
-Currently only tested with fake data.
-```bash
-python query_runs.py experiment_to_terms.json '${term}'
-```
-
-Search term must be in '', for example `breast cancer`
+This script requires a json file with samples (SRX/ERX/DRX) mapped to metadata terms. The file used was obtained from metaSRA (http://metasra.biostat.wisc.edu)
