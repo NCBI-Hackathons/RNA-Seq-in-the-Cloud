@@ -36,7 +36,7 @@ RUN pip3 install \
     seaborn \ 
     sklearn
 
-# Install R prerequesits for our tools
+# Install R prerequisites for our tools
 
 
 RUN R -q -e 'BiocManager::install("DESeq2", version = "3.8")' && \
