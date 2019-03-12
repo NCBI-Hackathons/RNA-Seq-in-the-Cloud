@@ -13,6 +13,11 @@ counts_path <- "/home/tommerschwarz/data/ERP000546_genecounts.txt"
 atts_path <- "/home/tommerschwarz/data/ERP000546_attributes.txt"
 #
 # Set output path for PCA plots, log fold-change tables, normalized counts
+out_path <- "/home/jmcgirr/output/"
+#
+# Set project names
+proj1 <- "ERP003613"
+proj2 <- "ERP000546"
 
 # local
 #counts_path <- "C:/Users/jmcgirr/Documents/GitHub/RNA-Seq-in-the-Cloud/Expression/deseq2/data/ERP000546_genecounts.txt"
@@ -27,6 +32,7 @@ att_cols <- c("type")
 group1s <- c("a")
 group2s <- c("b")
 
+#####
 ############################################
 ###### Create DESeq2 object and run ########
 ############################################
@@ -68,23 +74,34 @@ pca_plot <- plotPCA(rld, intgroup=c(att_cols[i]))
 print(pca_plot)
 #dev.off()
 
-resOrdered <- res[order(res$padj),]
-res_ordered <- as.data.frame(resOrdered)
+res_ordered <- res[order(res$padj),]
+res_ordered <- data.frame(res_ordered)
 res_ordered$geneID <- rownames(res_ordered)
-print(head(resOrdered))
+head(res_ordered)
+res_ordered$attribute_comparison <- paste(group1s[i],group2s[i],sep="_v_")
+res_ordered$geneID <- rownames(res_ordered)
 
-#resLFC <- lfcShrink(dds, coef=2, res=res)
 
-total_genes <- nrow(res_ordered)
-de_total <- nrow(res_ordered[which(res_ordered$padj < 0.05),])
-de_up <- (nrow(res_ordered[which(res_ordered$log2FoldChange > 0 & res_ordered$padj < 0.05),]))/total_genes
-de_dn <- (nrow(res_ordered[which(res_ordered$log2FoldChange < 0 & res_ordered$padj < 0.05),]))/total_genes
-prop_de <- de_total/total_genes
-total_genes_plot <- paste(total_genes, "genes", sep = " ")
+resLFC <- lfcShrink(dds, coef=2, res=res)
 
 ma_plot <- plotMA(res, colSig = "darkred", colNonSig = "grey")
 #tiff(paste(out_path,"de_plot.tiff"sep = ""), width = 3.5, height = 3.5, units = 'in', res = 500)
 print(ma_plot)
 #dev.off()
 
+ma_plot <- plotMA(resLFC, colSig = "darkred", colNonSig = "grey",
+                  ylim=c(-3.5,3.5), cex = 0.8)
+#tiff(paste(out_path,"de_plot.tiff"sep = ""), width = 3.5, height = 3.5, units = 'in', res = 500)
+print(ma_plot)
+#dev.off()
+
+
+norm_cts <- data.frame(counts(dds, normalized=TRUE))
+head(norm_cts)
+nrow(norm_cts)
+norm_cts$geneID <- rownames(norm_cts)
+#write.table(res_ordered,"C:/Users/jmcgirr/Desktop/de_output.txt", sep = "\t", quote = FALSE, row.names = FALSE)
+#write.table(norm_cts,"C:/Users/jmcgirr/Desktop/normalized_counts.txt", sep = "\t", quote = FALSE, row.names = FALSE)
+
 }
+#####
