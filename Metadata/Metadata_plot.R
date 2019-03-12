@@ -1,6 +1,6 @@
-hack_data <- read.table(file = "experiment_to_terms.tsv.txt", header = FALSE, sep = "\t")
+hack_data <- read.table(file = "./data/experiment_to_terms.tsv", header = FALSE, sep = "\t")
 library(rjson)
-query_disease_samples <- fromJSON(file = "/Users/khunzawlatt/Desktop/NCBI_hackathon/hackathon_clone/RNA-Seq-in-the-Cloud/Metadata/data/experiment_to_terms_term-breast-cancer.json")
+query_disease_samples <- fromJSON(file = "./data/term-in.json")
 
 
 query_disease_metadata <- subset(hack_data, V1 %in% query_disease_samples)
@@ -16,6 +16,5 @@ query_disease_metadata_top10$Metadata <- query_disease_metadata_top10$Var1
 
 library(ggplot2)
 
-p <-ggplot(query_disease_metadata_top10, aes(Metadata, percentage))
-p + geom_bar(stat = "identity") +
+p <-ggplot(query_disease_metadata_top10, aes(Metadata, percentage)) + geom_bar(stat = "identity") +
   theme(axis.text.x = element_text(angle = 60, hjust = 1))
