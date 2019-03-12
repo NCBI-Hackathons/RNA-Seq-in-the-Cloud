@@ -64,6 +64,6 @@ simplecosine==1.2
 simplejson==3.16.0
 six==1.12.0
 SocksiPy-branch==1.1
-urllib3==1.19.1
+urllib3==1.24.1
 zope.index==4.4.0
 zope.interface==4.6.0
