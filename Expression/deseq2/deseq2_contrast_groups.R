@@ -3,24 +3,25 @@
 suppressPackageStartupMessages(library(optparse))
 
 option_list <- list (
-                     make_option (c("-c","--counts"),
-                                  default="/home/tommerschwarz/data/ERP000546_genecounts.txt",
-                                  help="The gene counts file for each comparable run [default %default]"),
 
-                     make_option (c("-a","--attributes"),
-                                  default="/home/tommerschwarz/data/ERP000546_attributes.txt",
-                                  help="The attributes file for info on each run [default %default]"),
+    make_option (c("-c","--counts"),
+        default="/home/tommerschwarz/data/ERP000546_genecounts.txt",
+        help="The gene counts file for each comparable run [default %default]"),
 
-                     make_option (c("-o","--outdir"),
-                                  default="/home/jmcgirr/output/",
-                                  help="The attributes file for info on each run [default %default]")
+    make_option (c("-a","--attributes"),
+        default="/home/tommerschwarz/data/ERP000546_attributes.txt",
+        help="The attributes file for info on each run [default %default]"),
 
+    make_option (c("-o","--outdir"),
+        default="/home/jmcgirr/output/",
+        help="The attributes file for info on each run [default %default]")
     )
 
 
-opt  <- parse_args(OptionParser(#usage= "usage: %prog [options]",
-                                option_list=option_list)
-                   )
+opt  <- parse_args(
+    OptionParser(#usage= "usage: %prog [options]",
+        option_list=option_list)
+        )
 
 suppressPackageStartupMessages(library(DESeq2))
 
