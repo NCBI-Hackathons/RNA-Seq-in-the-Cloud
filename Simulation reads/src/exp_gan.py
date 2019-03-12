@@ -289,7 +289,7 @@ def train(n_epochs, BATCH_SIZE, TRAINING_RATIO, input_file, output_dir):
     discriminator_model.compile(optimizer=Adam(0.0001, beta_1=0.5, beta_2=0.9),
                                 loss=[wasserstein_loss,
                                       wasserstein_loss,
-                                      partial_gp_loss])
+                                      partial_gp_loss], metrics=["accuracy"])
     # We make three label vectors for training. positive_y is the label vector for real
     # samples, with value 1. negative_y is the label vector for generated samples, with
     # value -1. The dummy_y vector is passed to the gradient_penalty loss function and
@@ -316,11 +316,11 @@ def train(n_epochs, BATCH_SIZE, TRAINING_RATIO, input_file, output_dir):
                 d_loss = discriminator_model.train_on_batch(
                     [image_batch, noise],
                     [positive_y, negative_y, dummy_y])
-                discriminator_loss.append(d_loss)
+                discriminator_loss.append(d_loss[0])
                 g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE,
                                                                                     random_dim),
                                                                      positive_y)
-                generator_loss.append(g_loss)
+                generator_loss.append(g_loss[0])
                 # Still needs some code to display losses from the generator and discriminator,
                 # progress bars, etc.
         print("g_loss =", g_loss, "d_loss =", d_loss)
