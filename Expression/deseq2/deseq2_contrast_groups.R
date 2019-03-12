@@ -1,5 +1,28 @@
 library(DESeq2)
 
+
+suppressPackageStartupMessages(library(optparse))
+
+option_list <- list (
+                     make_option (c("-c","--counts"),
+                                  default="/home/tommerschwarz/data/ERP000546_genecounts.txt",
+                                  help="The gene counts file for each comparable run [default %default]"),
+
+                     make_option (c("-a","--attributes"),
+                                  default="/home/tommerschwarz/data/ERP000546_attributes.txt",
+                                  help="The attributes file for info on each run [default %default]"),
+
+                     make_option (c("-o","--outdir"),
+                                  default="/home/jmcgirr/output/"
+                                  help="The attributes file for info on each run [default %default]"),
+
+    )
+
+
+opt  <- parse_args(OptionParser(#usage= "usage: %prog [options]",
+                                option_list=option_list)
+                   )
+
 ############################################
 ###### Set paths and load 2 dataframes #####
 ############################################
@@ -7,13 +30,13 @@ library(DESeq2)
 # cluster jmcgirr@aa-rnaseq-clustering
 # Set paths for two dataframes created by Tommer
 # 1. read counts for each comparable run
-counts_path <- "/home/tommerschwarz/data/ERP000546_genecounts.txt"
+counts_path <- opt$counts
 #
 # 2. attributes for each run
-atts_path <- "/home/tommerschwarz/data/ERP000546_attributes.txt"
+atts_path <- opt$attributes
 #
 # Set output path for PCA plots, log fold-change tables, normalized counts
-out_path <- "/home/jmcgirr/output/"
+out_path <- opt$outdir
 #
 # Set project names
 proj1 <- "ERP003613"
