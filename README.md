@@ -39,7 +39,7 @@ The Docker image contains <this software> as well as a webserver and FTP server 
 
 ### Visualization of RNAseq Analyses
 
-![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Visualization/workflow.PNG?raw=true "Title")
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Visualization/3D_pca.PNG?raw=true "Title")
 
 ### Simple Expression Analysis
 
