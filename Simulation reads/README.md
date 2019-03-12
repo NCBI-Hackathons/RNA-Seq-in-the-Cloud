@@ -25,12 +25,22 @@ gsutil cat gs://ncbi_sra_rnaseq/genecounts/*.genecounts > compiled_genecounts.cs
 
 input: normalized read counts for experimental and control samples
 
-## Training
+### Training
 ```
 python src/exp_gan.py train --input_file data/test.csv --output_dir=train --n_epoch=500 --batch_size=10 --training_ratio=1
 ```
 
-## Generating samples
+### Generating samples
 ```
 python src/exp_gan.py generate --model_file train/models/generator_epoch_499.h5 --output_file output/test.csv --n_samples 10
+```
+
+## docker
+### Build 
+```
+docker build -t exp_gan:0.1.0 .
+```
+### Run
+```
+docker run --rm exp_gan:0.1.0
 ```
