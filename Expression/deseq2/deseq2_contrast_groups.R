@@ -66,42 +66,18 @@ group2s[i]
   
 # contrast groups
 res <- results(dds, contrast=c(att_cols[i],group1s[i],group2s[i]))
-#results(dds, contrast=c(att_cols[i]))
-
-pca_plot <- plotPCA(rld, intgroup=c(att_cols[i]))
-
-#tiff(paste(out_path,"pca.tiff",sep = ""), width = 6, height = 6, units = 'in', res = 500)
-print(pca_plot)
-#dev.off()
 
 res_ordered <- res[order(res$padj),]
 res_ordered <- data.frame(res_ordered)
 res_ordered$geneID <- rownames(res_ordered)
-head(res_ordered)
 res_ordered$attribute_comparison <- paste(group1s[i],group2s[i],sep="_v_")
 res_ordered$geneID <- rownames(res_ordered)
 
-
-resLFC <- lfcShrink(dds, coef=2, res=res)
-
-ma_plot <- plotMA(res, colSig = "darkred", colNonSig = "grey")
-#tiff(paste(out_path,"de_plot.tiff"sep = ""), width = 3.5, height = 3.5, units = 'in', res = 500)
-print(ma_plot)
-#dev.off()
-
-ma_plot <- plotMA(resLFC, colSig = "darkred", colNonSig = "grey",
-                  ylim=c(-3.5,3.5), cex = 0.8)
-#tiff(paste(out_path,"de_plot.tiff"sep = ""), width = 3.5, height = 3.5, units = 'in', res = 500)
-print(ma_plot)
-#dev.off()
-
-
 norm_cts <- data.frame(counts(dds, normalized=TRUE))
-head(norm_cts)
-nrow(norm_cts)
 norm_cts$geneID <- rownames(norm_cts)
-#write.table(res_ordered,"C:/Users/jmcgirr/Desktop/de_output.txt", sep = "\t", quote = FALSE, row.names = FALSE)
-#write.table(norm_cts,"C:/Users/jmcgirr/Desktop/normalized_counts.txt", sep = "\t", quote = FALSE, row.names = FALSE)
+final_results <- merge(res_ordered,norm_cts, by = c("geneID"))
 
+write.table(final_results,paste(group1s[i],"_vs_",group2s[i],"results.txt",sep=""), sep = "\t", quote = FALSE, row.names = FALSE)
 }
-#####
+
+
