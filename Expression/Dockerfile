@@ -22,3 +22,8 @@ RUN wget -O -  ftp://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/edirect.tar.gz | t
     /edirect/setup.sh 
 
 ENV PATH="/edirect:${PATH}"
+
+RUN wget -O /tmp/mdt.zip https://zenodo.org/record/1158314/files/NCBI-Hackathons/MetadataTable-v1.0.0.zip?download=1 && unzip /tmp/mdt.zip
+
+RUN pip3 install -r /NCBI-Hackathons-MetadataTable-fe9bfec/requirements.txt && \
+    ln -s /NCBI-Hackathons-MetadataTable-fe9bfec /MetadataTable
