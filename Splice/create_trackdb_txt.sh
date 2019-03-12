@@ -1,6 +1,8 @@
 #!/bin/bash
 
-for f in *.merged.bam ; do
+base=$1
+
+for f in ${base} ; do
     study=$(echo $f | sed -r 's/([^_]*).*/\1/g')
     tissue=$(echo $f | sed -r 's/([^_]*)_(.*)\.merged\.bam/\2/g')
     track=$(echo $f | sed 's/\.merged\.bam//g')
