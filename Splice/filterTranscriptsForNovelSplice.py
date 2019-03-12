@@ -28,6 +28,7 @@ gtf = []
 #rejectTx = [] ## store rejected transcripts with less than 2 introns
 exonTxH = {}
 exonKey = "NaN"
+exonCount = 0
 
 #################### FUNCTIONS ###############################################
 def examineRetainedIntrons(data):
@@ -50,16 +51,17 @@ with open("sample.500.gtf",'r') as g:
         if row.split(" ")[0] == "#": #filter out header and gaps
             continue
         if tx[2] == "transcript":
-            if exonTxH.get(exonKey,0) != 0 and exonCount > 2:
+            if exonTxH.get(exonKey,0) != 0 and exonCount > 1:
+                print(exonKey)
                 exonTxH.popitem()
                 exonCount = 0
         if any("reference_id" in attr for attr in tx[8].split(";")): #filter known tx
             continue
         if tx[2] == "exon":
             if not any("1" in exNum for exNum in tx[8].split(";")[2]): #filter for less than 2 introns and remove first exon
-                exonCount = 2
+                exonCount = 1
                 exonKey = "{0},{1},{2},{3}".format(tx[0],tx[3],tx[4],tx[6])
-                if exonCount == 2:
+                if exonCount == 1:
                     tx_id=tx[8].split(";")[1].split(" ")[2]
                 if exonKey in exonTxH.keys():
                     exonTxH[exonKey].append(tx_id)
@@ -68,7 +70,7 @@ with open("sample.500.gtf",'r') as g:
                     exonTxH[exonKey].append(tx_id)
                 exonCount+=1
                 examineRetainedIntrons(row)
-
+    exonTxH.popitem() #pop off last item of hash since it is external exon
             #rejectTx.append(row) 
 
 
