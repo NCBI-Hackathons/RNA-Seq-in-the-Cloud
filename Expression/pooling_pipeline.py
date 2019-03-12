@@ -75,10 +75,28 @@ for project in projects:
 
 total_df.to_csv('joint_genecounts.txt', sep = '\t')
 
+## 3a. pool metadata
+
+joint_df = pd.read_csv('joint_genecounts.txt', sep = '\t')
+
+
+meta_df = pd.DataFrame(index = list(joint_df))
+
+for project in projects:
+	sub_meta_df = pd.read_csv(meta_path+project+'.tsv', sep = '\t', index_col = 0)
+	sub_meta_df = sub_meta_df.set_index(['Run'])
+	meta_df = pd.concat([sub_meta_df, meta_df], axis = 0)
+
+
+meta_df['Run'] = list(meta_df.index)
+meta_df.to_csv('joint.tsv', sep = '\t')
+
+
 ## 4. multiproject PCA
 
 for project in ['joint']:
-	subprocess.call('python3 counts_pca-2.py --projname '+project+' --df '+project+'_genecounts.txt --md '+meta_path+project+'.tsv --review', shell = True)
+	print('python3 counts_pca-2.py --projname '+project+' --df '+project+'_genecounts.txt --md '+project+'.tsv --review')
+	subprocess.call('python3 counts_pca-2.py --projname '+project+' --df '+project+'_genecounts.txt --md '+project+'.tsv --review', shell = True)
 
 
 ## 5. provide metadata matrix to be passed to DESeq2
