@@ -41,12 +41,9 @@ atts_path <- opt$attributes
 out_path <- opt$outdir
 #
 
-# Set column in attribute(s) file to include in DESeq objects
-design <- "type"
-
 # What groups do we want to compare?
 # Which column in the attributes should be compared?
-att_cols <- c("organism_part")
+att_cols <- c("type")
 group1s <- c("appendix")
 group2s <- c("colon")
 
@@ -58,16 +55,15 @@ group2s <- c("colon")
 counts <- read.table(counts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
 rownames(counts) <- counts[,1]
 counts <- counts[,-1]
-atts <- read.table(atts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
-atts <-as.matrix(read.table(atts_path ,header = TRUE,row.names=1))
+atts <-as.matrix(read.table(atts_path ,header = TRUE,row.names=1, sep = "\t"))
 
 ncol(counts)
 nrow(atts)
-
+paste0(att_cols)
 # create DESeq Object
 dds <- DESeqDataSetFromMatrix(countData = counts,
                               colData = atts,
-                              design= ~organism_part)
+                              design= ~type)
 
 dds <- estimateSizeFactors(dds)
 idx <- rowSums(counts(dds, normalized=TRUE) >= 2 ) >= 2
