@@ -10,10 +10,10 @@ def centeroid(arr):
     return sum_x/length, sum_y/length
 
 parser = argparse.ArgumentParser(description='PCA of gene counts')
-parser.add_argument('-projname',type='str',help='name of project')
-parser.add_argument('-df',type='str',
-                    help='gene counts dataframe, tab separated')
-parser.add_argument('-md',type='str',
+parser.add_argument('-projname',type=str,help='name of project')
+parser.add_argument('-df',type=str,
+                    help='sample gene counts dataframe, tab separated')
+parser.add_argument('-md',type=str,
                     help='metadata tsv',default=None)
 parser.add_argument('--review', action='store_true',
                 help='retain outliers for analysis')
@@ -21,7 +21,8 @@ parser.add_argument('--review', action='store_true',
 args = parser.parse_args()
 
 data = pd.read_csv(args.df, sep='\t', index_col=0)
-meta = pd.read_csv(args.md,sep='\t')
+if args.md:
+    meta = pd.read_csv(args.md,sep='\t')
 
 if len(data.columns) > 2:
     data_normcounts = data/data.sum()
@@ -43,8 +44,10 @@ if len(data.columns) > 2:
     dist_std,dist_mean,dist = np.std(dist),np.mean(dist),np.array(dist)
     ingroup = np.nonzero(~(dist > (dist_mean + 2*dist_std)))
     outliers = np.nonzero((dist > (dist_mean + 2*dist_std)))
-    outlier_removed_df = data.columns[ingroup]
+    print(outliers)
+    outlier_removed_df = data[data.columns[ingroup]]
     if args.review:
-        outliers_df  = data.columns[outliers]
+        outliers_df  = data[data.columns[outliers]]
         outliers_df.to_csv('./{}_outliers.csv'.format(args.projname))
     outlier_removed_df.to_csv('./{}_cleaned.csv'.format(args.projname))
+    print('Found {} outliers'.format(len(outliers[0])))

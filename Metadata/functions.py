@@ -16,7 +16,6 @@ def term_to_run(sample_to_terms, term):
     return runs_with_term, runs_without_term
 
 def match_case_to_controls(term, control_samples, case_samples, sample_to_terms):
-    
     extra_terms_with = set()
     control_term_to_samples = defaultdict(lambda: set())
     case_term_to_samples = defaultdict(lambda: set())
@@ -32,7 +31,6 @@ def match_case_to_controls(term, control_samples, case_samples, sample_to_terms)
     
     term_to_partition = {}
     for term in intersect_terms:
-        print(case_term_to_samples[term]) 
         term_to_partition[term] = {
             'case': list(case_term_to_samples[term]),
             'control': list(control_term_to_samples[term])
