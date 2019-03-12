@@ -14,7 +14,7 @@ def main():
 
     for run in runs:
         num_terms = random.randint(1, 5)
-        run_to_term[run] = random.sample(range(1, terms), num_terms)
+        run_to_term[run] = str(random.sample(range(1, terms), num_terms))
         run_to_study[run] = random.randint(1, studies)
 
     data_dict['run_to_term'] = run_to_term
