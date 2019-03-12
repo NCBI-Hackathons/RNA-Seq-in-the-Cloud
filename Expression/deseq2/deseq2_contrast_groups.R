@@ -13,8 +13,8 @@ option_list <- list (
                                   help="The attributes file for info on each run [default %default]"),
 
                      make_option (c("-o","--outdir"),
-                                  default="/home/jmcgirr/output/"
-                                  help="The attributes file for info on each run [default %default]"),
+                                  default="/home/jmcgirr/output/",
+                                  help="The attributes file for info on each run [default %default]")
 
     )
 
