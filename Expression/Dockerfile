@@ -17,15 +17,3 @@ RUN pip3 install \
 RUN R -q -e 'BiocManager::install("DESeq2", version = "3.8")' && \
     rm -rf /tmp/Rtmp*
 
-# import sys
-# import sklearn
-# import pandas as pd
-# import gcsfs
-# import seaborn as sns
-# import numpy as np
-# import matplotlib.pyplot as plt
-# import math
-# import random
-# from sklearn.preprocessing import StandardScaler
-# from sklearn.decomposition import PCA
-# from sklearn.pipeline import Pipeline
