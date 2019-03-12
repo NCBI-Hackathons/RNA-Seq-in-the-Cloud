@@ -8,11 +8,11 @@ while read line; do
   runs=$(echo "$line" | cut -f3)
   mkdir $study>/dev/null ||:
   cd $study
-#  gsutil -m cp $(for run in $(echo "$runs" | tr , ' '); do
-#    echo -ne " gs://ncbi_sra_rnaseq/$run.bam"
-#  done) . 
-#  tmpbam=$(mktemp merged.XXX.bam)
-#  samtools merge -@4 -f $tmpbam *.bam
+  gsutil -m cp -P -n $(for run in $(echo "$runs" | tr , ' '); do
+    echo -ne " gs://ncbi_sra_rnaseq/$run.bam"
+  done) . 
+  tmpbam=$(mktemp merged.XXX.bam)
+  samtools merge -@4 -f $tmpbam *.bam
   tmpbam='merged.84a.bam'
   samtools index $tmpbam
   chrbam=$(mktemp chr.XXX.bam)
