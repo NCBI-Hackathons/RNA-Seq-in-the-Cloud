@@ -27,6 +27,12 @@ gsutil cat gs://ncbi_sra_rnaseq/genecounts/*.genecounts > compiled_genecounts.cs
 
 input: transformed read counts for experimental and control samples;
 
+input format:
+
+| gene_1 | ... | gene_n | case_control |
+| ------ | --- | ------ | ------------ |
+| 0.1    | ... | 0.2    | 0            |
+
 ### Training
 
 ```
