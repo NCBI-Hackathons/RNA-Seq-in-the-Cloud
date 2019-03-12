@@ -1,0 +1,3 @@
+genome hg38
+trackDb hg38/trackDb.txt
+

@@ -1,0 +1,6 @@
+hub RNA-Seq-in-the-Cloud
+shortLabel RNA-Seq-in-the-Cloud Alignments
+longLabel Short read alingment data from the RNA-Seq-in-the-Cloud Hackathon
+genomesFile genomes.txt
+email kodalivk@ncbi.nlm.nih.gov
+descriptionUrl https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud
