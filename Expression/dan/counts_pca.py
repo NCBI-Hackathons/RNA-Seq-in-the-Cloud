@@ -44,8 +44,10 @@ if len(data.columns) > 2:
     dist_std,dist_mean,dist = np.std(dist),np.mean(dist),np.array(dist)
     ingroup = np.nonzero(~(dist > (dist_mean + 2*dist_std)))
     outliers = np.nonzero((dist > (dist_mean + 2*dist_std)))
+    print(outliers)
     outlier_removed_df = data[data.columns[ingroup]]
     if args.review:
         outliers_df  = data[data.columns[outliers]]
         outliers_df.to_csv('./{}_outliers.csv'.format(args.projname))
     outlier_removed_df.to_csv('./{}_cleaned.csv'.format(args.projname))
+    print('Found {} outliers'.format(len(outliers[0])))
