@@ -59,9 +59,9 @@ design <- "type"
 
 # What groups do we want to compare?
 # Which column in the attributes should be compared?
-att_cols <- c("type")
-group1s <- c("a")
-group2s <- c("b")
+att_cols <- c("organism_part")
+group1s <- c("appendix")
+group2s <- c("colon")
 
 #####
 ############################################
@@ -80,7 +80,7 @@ nrow(atts)
 # create DESeq Object
 dds <- DESeqDataSetFromMatrix(countData = counts,
                               colData = atts,
-                              design= ~type)
+                              design= ~organism_part)
 
 dds <- estimateSizeFactors(dds)
 idx <- rowSums(counts(dds, normalized=TRUE) >= 2 ) >= 2
@@ -88,7 +88,6 @@ dds <- dds[idx,]
 dds <- DESeq(dds)
 rld <- vst(dds)
 
-i <- 1
 for (i in c(1:length(att_cols)))
 {
 att_cols[i]
