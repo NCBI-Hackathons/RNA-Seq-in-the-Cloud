@@ -19,5 +19,5 @@ with open(infile, 'rt') as fi, open(outfile, 'wt') as fo:
             if 'reference_id' not in line[8]:
                 tx_id = re.search('transcript_id "STRG.(\d+).\d+"', line[8]).group(1)
                 if int(tx_id) % 3 == 0:
-                    line[8] = line[8] + 'novel "yes";'
+                    line[8] = line[8] + ' novel "yes";'
         tblout.writerow(line)
