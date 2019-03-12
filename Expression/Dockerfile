@@ -30,4 +30,4 @@ RUN R -q -e 'BiocManager::install("DESeq2", version = "3.8")' && \
     R -q -e 'install.packages("optparse")' && \
     rm -rf /tmp/Rtmp*
 
-ADD deseq2/deseq2_contrast_groups.R /
+ADD deseq2/deseq2_contrast_groups.R dan/counts_pca.py /
