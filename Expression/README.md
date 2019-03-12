@@ -4,7 +4,7 @@
 
 
 ## PCA_counts
-Example:\n
+Example:<br/>
 python counts_pca.py -projname PROJNAME -df ERP000546_genecounts.txt --md meta_data.tsv --review
 
 ### --projname (str)
