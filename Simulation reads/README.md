@@ -1,5 +1,6 @@
 
-python3
+## install requirements
+install `python >= 3.5`
 
 ```
 pip install numpy pandas sklearn keras tensorflow-gpu matplotlib pillow argparse
