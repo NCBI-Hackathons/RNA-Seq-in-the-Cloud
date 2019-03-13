@@ -100,7 +100,8 @@ def series(term, target_property, sample_to_real_val, sample_to_terms, sample_to
 
 def match_case_to_controls(term, control_samples, case_samples, sample_to_terms, 
     sample_to_study, blacklist_terms, term_name_to_id, sample_to_type, 
-    filter_poor=True, filter_cell_line=True, filter_differentiated=True):
+    filter_poor=True, filter_cell_line=True, filter_differentiated=True, 
+    by_run=False, sample_to_runs=None):
     filtered = set()
     control_samples = set(control_samples)
     case_samples = set(case_samples)
@@ -184,37 +185,68 @@ def match_case_to_controls(term, control_samples, case_samples, sample_to_terms,
     da = []
     for tissue_term in tissue_intersections:
         partition = term_to_partition[tissue_term]
-        for sample in partition['case']:
-            da.append((
-                sample,
-                sample_to_study[sample],
-                'case',
-                tissue_term,
-                sample in poor_samples,
-                sample in cell_line_samples,
-                sample in differentiated_samples
-            ))
-        for sample in partition['control']:
-            da.append((
-                sample,
-                sample_to_study[sample],
-                'control',
-                tissue_term,
-                sample in poor_samples,
-                sample in cell_line_samples,
-                sample in differentiated_samples
-            ))
-
-    df = pd.DataFrame(data=da, columns=[
-        'experiment_accession', 'study_accession', 
-        'case_control',
-        'tissue_group', 'missing_metadata',
-        'cell_line', 'differentiated'
-    ])
+        if by_run:
+            for sample in partition['case']:
+                for run in sample_to_runs[sample]:
+                    da.append((
+                        run,
+                        sample_to_study[sample],
+                        'case',
+                        tissue_term,
+                        sample in poor_samples,
+                        sample in cell_line_samples,
+                        sample in differentiated_samples
+                    ))
+            for sample in partition['control']:
+                for run in sample_to_runs[sample]:
+                    da.append((
+                        run,
+                        sample_to_study[sample],
+                        'control',
+                        tissue_term,
+                        sample in poor_samples,
+                        sample in cell_line_samples,
+                        sample in differentiated_samples
+                    ))
+        else:
+            for sample in partition['case']:
+                da.append((
+                    sample,
+                    sample_to_study[sample],
+                    'case',
+                    tissue_term,
+                    sample in poor_samples,
+                    sample in cell_line_samples,
+                    sample in differentiated_samples
+                ))
+            for sample in partition['control']:
+                da.append((
+                    sample,
+                    sample_to_study[sample],
+                    'control',
+                    tissue_term,
+                    sample in poor_samples,
+                    sample in cell_line_samples,
+                    sample in differentiated_samples
+                ))
+    if by_run:
+        df = pd.DataFrame(data=da, columns=[
+            'Run', 'project',
+            'condition',
+            'type', 'missing_metadata',
+            'cell_line', 'differentiated'
+        ])
+    else:
+        df = pd.DataFrame(data=da, columns=[
+            'experiment', 'project', 
+            'condition',
+            'type', 'missing_metadata',
+            'cell_line', 'differentiated'
+        ])
     return df, control_confound, case_confound, tissue_intersections
 
 def select_case_control_experiment_set(df, case_control, term):
-    return list(df.loc[(df['case_control'] == case_control) & (df['tissue_group'] == term), 'experiment_accession'])
+    return list(df.loc[(df['condition'] == case_control) & (df['type'] == term), 'experiment_accession'])
 
 def main():
     with open('./data/experiment_to_terms.json', 'r') as f:
@@ -235,6 +267,9 @@ def main():
     with open('./data/experiment_to_real_value_terms.json', 'r') as f:
         sample_to_real_val = json.load(f)
 
+    with open('./data/experiment_to_runs.json', 'r') as f:
+        sample_to_runs = json.load(f)
+
     filter_available = True
     if filter_available:
         sample_to_terms = {
@@ -245,24 +280,26 @@ def main():
     #term = 'glioblastoma multiforme' # A good one
     #term = 'cystic fibrosis' # okay
 
+    """    
     term = 'blood'
+    #term = 'brain'
     case, control = term_to_run(sample_to_terms, term)
-
     blacklist_terms = set(['disease', 'disease of cellular proliferation'])
-
     age_to_samples, df = series(term, 'age', sample_to_real_val, sample_to_terms,             
         sample_to_type, sample_to_study, term_name_to_id, blacklist_terms, 
-        filter_poor=False, filter_cell_line=True, filter_differentiated=True
+        filter_poor=False, filter_cell_line=True, filter_differentiated=True,
+        value_limit=100, target_unit=None
     )
-
     print(df)
     for age in sorted(age_to_samples.keys()):
         print("%d\t%d" % (age, len(age_to_samples[age])))
+    """
 
     """
     r = match_case_to_controls(term, control, case, sample_to_terms, 
         sample_to_study, blacklist_terms, term_name_to_id, sample_to_type, 
-        filter_poor=True, filter_cell_line=True, filter_differentiated=True)
+        filter_poor=True, filter_cell_line=True, filter_differentiated=True,
+        sample_to_runs=sample_to_runs)
     df = r[0]
     control_confound = r[1]
     case_confound = r[2]
@@ -272,23 +309,22 @@ def main():
     print('Tissue intersections: %s' % tissue_intersections)
     """
 
-    
-    """
     term = 'glioblastoma multiforme' # A good one
     case, control = term_to_run(sample_to_terms, term)
     blacklist_terms = set(['disease', 'disease of cellular proliferation'])
     r = match_case_to_controls(term, control, case, sample_to_terms,
         sample_to_study, blacklist_terms, term_name_to_id, sample_to_type,
-        filter_poor=True, filter_cell_line=True, filter_differentiated=True)
+        filter_poor=True, filter_cell_line=True, filter_differentiated=True,
+        sample_to_runs=sample_to_runs, by_run=True)
     df = r[0]
     control_confound = r[1]
     case_confound = r[2]
     tissue_intersections = r[3]
     df.to_csv('glioblastoma_multiforme_case_control.csv')
-    #print(df)
+    print(df)
+    #print(df.loc[(df['type'] == 'brain')])
     #print('Tissue intersections: %s' % tissue_intersections)
-    print(select_case_control_experiment_set(df, 'case', 'blood'))
-    """
+    #print(select_case_control_experiment_set(df, 'case', 'blood'))
 
 if __name__ == "__main__":
     main() 
