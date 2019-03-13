@@ -7,7 +7,7 @@ piecharts <- par(mfrow=c(2,2))
 
 query_cell_line <- query_disease_metadata_sorted[which(query_disease_metadata_sorted$Metadata == "cell line"),]
 if (nrow(query_cell_line) == 0) {
-  query_cell_line_pie <- c(0.0, 1.0)
+  query_cell_line_pie <- c(0.0,1.0)
 } else {
   query_cell_line_pie <- c(query_cell_line$Proportion, 1 - query_cell_line$Proportion)
 }
@@ -52,4 +52,5 @@ if (nrow(query_female) == 0) {
 query_male_female_pie <- c(male_prop, female_prop, 1 - (male_prop + female_prop))
 pie_male_female_labels <- c("male", "female", "no information")
 pie_male_female <- pie(query_male_female_pie, labels = pie_male_female_labels, main="Sex", col = rainbow(length(query_male_female_pie)))
+
 
