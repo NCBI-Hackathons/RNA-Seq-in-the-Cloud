@@ -72,13 +72,26 @@ group2s <- c("case")
 
 atts <- read.table(atts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
 atts <- atts[which(atts$type == opt$type & atts$is_outlier == "False"),]
+
+# subset data for speed
+# atts_cas <- atts[which(atts$condition == "case"),]
+# atts_con <- atts[which(atts$condition == "control"),]
+# 
+# atts <- rbind(atts_cas[sample(nrow(atts_cas), 9), ],
+#               atts_con[sample(nrow(atts_con), 9), ])
+# atts <- atts[order(atts$Run),]
+# 
+#
+atts_cas <- atts[which(atts$condition  == "case"),]
+atts_con <- atts[which(atts$condition  == "control"),]
 counts <- read.table(counts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
 rownames(counts) <- counts[,1]
 counts <- counts[,-1]
 keeps <- names(counts)[(names(counts) %in% atts$Run)]
 counts <- counts[, keeps]
-rownames(atts) <- atts[,1]
-atts <- atts[,-1]
+counts <- counts[ , order(names(counts))]
+rownames(atts) <- atts$Run
+atts$Run <- NULL
 atts <- as.matrix(atts)
 
 if (opt$outliers)
@@ -86,22 +99,38 @@ if (opt$outliers)
   atts <- read.table(atts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
   counts <- read.table(counts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
   atts <- atts[which(atts$type == opt$type),]
+  atts <- atts[order(atts$Run),]
+  atts_cas <- atts[which(atts$condition  == "case"),]
+  atts_con <- atts[which(atts$condition  == "control"),]
   rownames(counts) <- counts[,1]
   counts <- counts[,-1]
   keeps <- names(counts)[(names(counts) %in% atts$Run)]
   counts <- counts[, keeps]
-  rownames(atts) <- atts[,1]
-  atts <- atts[,-1]
+  counts <- counts[ , order(names(counts))]
+  rownames(atts) <- atts$Run
+  atts$Run <- NULL
   atts <- as.matrix(atts)
 }
 
 ncol(counts)
 nrow(atts)
 
+
 # create DESeq Object
-dds <- DESeqDataSetFromMatrix(countData = counts,
-                              colData = atts,
-                              design= ~condition+project)
+if (length(unique(atts_cas$project))> 1 & length(unique(atts_con$project)) >1)
+{
+  dds <- DESeqDataSetFromMatrix(countData = counts,
+                                colData = atts,
+                                design= ~condition+project)
+
+                                
+}else                            
+{                            
+
+  dds <- DESeqDataSetFromMatrix(countData = counts,
+                                colData = atts,
+                                design= ~condition)
+}
 dds$condition <- factor(dds$condition, levels = c("control","case"))
 
 dds <- estimateSizeFactors(dds)
@@ -130,6 +159,8 @@ norm_cts$geneID <- rownames(norm_cts)
 final_results <- merge(res_ordered,norm_cts, by = c("geneID"))
 
 write.table(final_results,paste(group1s[i],"_vs_",group2s[i],"_results.txt",sep=""), sep = "\t", quote = FALSE, row.names = FALSE)
+write.table(atts,paste(group1s[i],"_vs_",group2s[i],"_attributes.txt",sep=""), sep = "\t", quote = FALSE, row.names = TRUE)
+
 }
 
 

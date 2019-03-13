@@ -37,6 +37,24 @@ strand-specific*:if strand is -, then it is actually the last exon. Same notatio
 
 Dependencies: python 3.6.4, csv, collections
 
+### Verification of Novel Exons
+
+To verify any novel exons in your data, run:
+```
+python detectNovelExons.py 
+```
+in the location of your experimental gtf files, as well as our transcript alignment file ( importTxAlignments.py , in tsv format. **Proprietary. BAM file available upon request **) and GenCode.
+
+This code will filter your gtf file for known transcripts, any external exons, and retained introns. It will then compare the remaining
+exons to unique transcript alignment exons. After successful run, three output files will appear in the directory of the script: 
+1. _fileName_allExon.tsv: contains all filtered exons, not verified by the transcript alignment file
+2. _fileName_ann.tsv: contains all filtered exons, not verified by the transcript alignment file
+3. _fileName.log.out: contains information about the total number of exons, number of filtered exons, and number of verified filtered exons.
+
+A gtf with roughly 715336 lines takes approximately 3-5 minutes to run (depending on the size of your transcript alignment file, or gencode)
+
+Warning: The Gencode code is still underdevelopment and runs incredibly slow. Use at your own risk. Additionally, the retained intron function may remove relevant transcripts in an effort to be overly conservative. If the outputted exons are too low, I advise not using this function in the filtering step until improvements are made. 
+
 ### Command Line Samples
 
 To extract nove transcripts that satisfy: 1) have at least 1 intron, 2) (strand-specifc) first exon is not referenced:
