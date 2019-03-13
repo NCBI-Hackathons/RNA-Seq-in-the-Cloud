@@ -1,5 +1,8 @@
 # Generative Adversarial Networks for Bulk RNAseq
 
+## Introduction
+Generative Adversarial Networks (GAN) are a deep learning framework that can been used to synthesize data and has been successfully used for image classification tasks. Here we will explore the possibility of creating simulated RNA-seq datasets from the real data, to help solve the problem of lacking samples in biological experiments. However, it is still unclear to what extent simulated data can reflect the biology of experimental and control samples.     
+
 ## Install requirements
 install `python >= 3.5`
 
@@ -25,9 +28,9 @@ gsutil cat gs://ncbi_sra_rnaseq/genecounts/*.genecounts > compiled_genecounts.cs
 
 ## GAN pipeline
 
-input: transformed read counts for experimental and control samples;
+![Alt text](https://raw.githubusercontent.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/master/Generative%20Adversarial%20Networks/sre_var_calling.tiff?raw=true "Title")
 
-input format:
+input format: transformed read counts for case and control samples;
 
 | gene_1 | ... | gene_n | case_control |
 | ------ | --- | ------ | ------------ |
@@ -47,9 +50,6 @@ python src/exp_gan.py generate --model_file train/models/generator_epoch_499.h5 
 
 ### Generating matrices for visualization
 
-TODO:
-1. generating read count matrix for control samples;
-2. generating read count matrix for experimental samples;
 
 ## docker
 ### Build 
