@@ -22,7 +22,6 @@ df_normalized_control_2$newcolumn <- 2
 df_raw_case_2$newcolumn <- 3
 df_raw_control_2$newcolumn <- 4
 
-
 # Combine dataframes
 combined_dataset <- rbind(df_normalized_case_2, df_normalized_control_2) # normalized data
 
@@ -33,6 +32,14 @@ library(ggfortify)
 autoplot(prcomp(combined_dataset), colour = 'newcolumn')
 autoplot(prcomp(combined_dataset_2), colour = 'newcolumn')
 
+# Add labels to PCA
+autoplot(prcomp(combined_dataset), colour = 'newcolumn', label = TRUE, label.size = 3)
+autoplot(prcomp(combined_dataset_2), colour = 'newcolumn', label = TRUE, label.size = 3)
+
+# Turn shape off for PCA plot to clarify the image
+autoplot(prcomp(combined_dataset), colour = 'newcolumn', shape = FALSE, label.size = 3)
+autoplot(prcomp(combined_dataset_2), colour = 'newcolumn', shape = FALSE, label.size = 3)
+
 # Get PCA information
 library("factoextra")
 
@@ -42,8 +49,6 @@ result_raw <- get_pca(combined_dataset_2)
 
 write.csv(result_normalized, "result_normalized.csv")
 write.csv(result_raw, "result_raw.csv")
-
-
 
 
 
