@@ -5,7 +5,7 @@
 
 ## PCA_counts
 Example:<br/>
-python counts_pca.py -projname PROJNAME -df ERP000546_genecounts.txt --md meta_data.tsv --review
+python3 counts_pca.py --projname *PROJNAME* --df *ERP000546_genecounts.txt* --md *meta_data.tsv* --review
 
 ### --projname (str)
 Name of SRA project 
