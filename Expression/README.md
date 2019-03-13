@@ -11,7 +11,8 @@ python3 counts_pca.py --case *flag* --input *string* --name *string*
 Flag if projects are case/controlled 
 
 ### --input (str)
-Path to input data
+Path to input metadata files, which must have columns: 'Run', 'project', 'condition','type'
+If --case flag is indicated, values in 'condition' column must be 'case' or 'control'
 ### --name (str)
 custom name given to project
 
