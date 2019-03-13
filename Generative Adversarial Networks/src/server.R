@@ -24,7 +24,15 @@ function(input, output, session) {
   })
   
   text_value <- eventReactive(input$run_script, {
-    runif(input$pos)
+    system("ls")
+    myvec <- read.csv("/tmp/gan_visualization.csv", header=FALSE) # (n + 1) * 1
+    case_control <- myvec[1,length(myvec)]
+    normalized_counts <- myvec[1,1:length(myvec)-1]
+    print(case_control)
+    print(normalized_counts[,0:10])
+    
+    mymat <- read.csv("/tmp/gan_pca_mat.csv", header = FALSE) # n * 2
+    coors <- as.matrix(normalized_counts) %*% t(as.matrix(mymat))
   })
   output$r <- renderPrint({text_value()})
   
