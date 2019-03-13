@@ -40,7 +40,37 @@ We then measure the euclidean distance on our principal component space to the c
 After eliminating outlier runs from multiple projects that we aim to pool, we perform a canonical correlation analysis (CCA), which captures shared signal across multiple datasets. We do this in order to distinguish biological differences from technical sources of variation
 
 
-## DESeq2
-Rough DESeq2 methods: Users can compare expression across multiple tissue types and conditions by running "Rscript deseq_contrast_groups.R --counts $counts.txt --a $attributes.txt --i $comparisons.txt --o $output_path". The counts.txt and attributes.txt files are output by "Dan and Tommer scripts".  A 'count' data frame contains read counts for each gene for each individual run. An 'attribute' data frame contains metadata that associates each run with its project ID, sample type, and condition. Sample type can describe tissue of origin, sex, age, etc. Additionally, there can be several sample type columns in each attribute file. The condition of each run is a binary categorical (case or control). The comparisons.txt file is user generated based on which comparisons the user finds interesting. The comparisons.txt file should be a tab delimited text file with three columns. Column one contains the name of a sample type column, column two and three contain the condition names. For example, a row might be "kidney" "cancer" "healthy". The user can define comparisons of interest based on sample types and conditions of each run. The model design would include sample types and conditions as factors (design = ~ projectID+sample type) and would contrast all runs for healthy kidney samples vs. cancer kidney samples. Output depth normalized counts for each run, log fold-change and p-values for each genes
+## Differential expression comparisons with DESeq2
+### deseq2_contrast_groups.R
+Example Usage:
+Rscript deseq2_contrast_groups.R  geneCounts.txt --attributes metaData.txt --type blood --outliers --outdir output/ 
+
+Users can compare expression across multiple tissue types and conditions by running Rscript deseq2_contrast_groups.R.
+The DESEq model design includes include sample types (tissue, age, sex) and project IDs as factors (design = ~ projectID+sample type).
+Users will define case vs. control comparisons to analyze with the --type flag by specifying a variable in the 'type' column of metaData.txt. This script will output 'control_vs_case.txt' containing log fold changes in expression between cases and controls matching matching the --type option. The output also contains p-values for each gene and depth normalized read counts for each gene for each sample. Only genes with at least two read counts across all samples are used for analysis.
+
+### Flags:
+#### --counts
+nxm table where n=genes and m=counts for each run
+
+#### --attributes
+nxm table where n=runs and m=meta data attributes (type, condition, project, outlier)
+type is usually a tissue type (but can also be age, sex, etc.)
+condition is either case or control (usually meaning healthy or disease samples)
+project is the SRA project 
+outlier is True or False and determined upstream in the pipeline
+
+#### --type
+MUST be defined!
+MUST correspond to a variable in the 'type' column of the attribute table
+For example, --type liver
+
+#### --outliers
+Include this flag if you want to perform analysis including outliers determined upstream in the pipeline
+
+#### --outdir
+path to output directory that will be created
+default is the working directory
+
 
 
