@@ -27,7 +27,7 @@ The Docker image contains <this software> as well as a webserver and FTP server 
 
 ### Metadata Binning Workflow
 
-![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/DataSetQuery.jpg?raw=true "Title")
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Screen%20Shot%202019-03-13%20at%203.32.45%20PM.png?raw=true "Title")
 
 ### GANs for Synthetic Data Expansion
 
