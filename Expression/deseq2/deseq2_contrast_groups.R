@@ -52,9 +52,9 @@ setwd(out_path)
 
 # What groups do we want to compare?
 # Which column in the attributes should be compared?
-att_cols <- c("type")
-group1s <- c("appendix")
-group2s <- c("colon")
+att_cols <- c("condition")
+group1s <- c("case")
+group2s <- c("control")
 
 #####
 ############################################
@@ -72,7 +72,7 @@ nrow(atts)
 # create DESeq Object
 dds <- DESeqDataSetFromMatrix(countData = counts,
                               colData = atts,
-                              design= ~type)
+                              design= ~condition)
 
 dds <- estimateSizeFactors(dds)
 idx <- rowSums(counts(dds, normalized=TRUE) >= 2 ) >= 2
