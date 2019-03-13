@@ -28,7 +28,7 @@ gsutil cat gs://ncbi_sra_rnaseq/genecounts/*.genecounts > compiled_genecounts.cs
 
 ## GAN pipeline
 
-![Alt text](https://raw.githubusercontent.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/master/Generative%20Adversarial%20Networks/sre_var_calling.tiff?raw=true "Title")
+![Alt text](https://raw.githubusercontent.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/master/Generative%20Adversarial%20Networks/GAN_pipeline.tiff?raw=true "Title")
 
 input format: transformed read counts for case and control samples;
 
