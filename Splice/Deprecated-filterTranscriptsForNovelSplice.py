@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+NOTE: USE DETECTNOVELEXONS.PY
 ####Splice filtering
 ####Nicole Lama
 ####RNA_Seq_In_Cloud
