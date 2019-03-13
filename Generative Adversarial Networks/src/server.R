@@ -7,12 +7,12 @@ function(input, output, session) {
   
   output$ui <- renderUI({
     sliderInput("val", 
-                       "Choose the input Value",
-                       min = -3, 
-                       max = 3, 
-                       value = df[input$pos,1],
-                      step = 0.01)
-           
+                "Choose the input Value",
+                min = -3, 
+                max = 3, 
+                value = df[input$pos,1],
+                step = 0.01)
+    
     
   })
   
@@ -34,6 +34,9 @@ function(input, output, session) {
     mymat <- read.csv("/tmp/gan_pca_mat.csv", header = FALSE) # n * 2
     coors <- as.matrix(normalized_counts) %*% t(as.matrix(mymat))
   })
-  output$r <- renderPrint({text_value()})
+  output$r <- renderPlot({
+    ggplot(data = coors, aes(x=coors[1,1],y=coors[1,2], size=4))+
+      geom_point()
+    })
   
 }
