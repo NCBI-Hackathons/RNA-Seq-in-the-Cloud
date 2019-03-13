@@ -13,7 +13,7 @@ and validate them against known exons in GENCODE and our own annotated data.
 
 ## Getting Started
 
-Before use, it is recommended to run your dataset through metadata scripts (? and if so add link here) to ensure it is complete and clean enough for analysis
+Before use, it is recommended to preprocess your data (fastq? gtf?) through our metadata scripts (? and if so add link here) to ensure it is fit for analysis
 
 ### Prerequisites
 
