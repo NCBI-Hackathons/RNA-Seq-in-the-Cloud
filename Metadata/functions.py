@@ -22,7 +22,8 @@ def _is_poor_quality(terms, term_name_to_id):
     found_cell_type = False
     for term in terms:
         term_id = term_name_to_id[term]
-        if 'UBERON' in term_id and term != 'male organism' and term != 'female organism' and term != 'adult organism':
+        if 'UBERON' in term_id and term != 'male organism' \
+            and term != 'female organism' and term != 'adult organism':
             found_tissue = True
         elif 'CVCL' in term_id:
             found_cell_line = True
@@ -37,7 +38,11 @@ def _is_cell_line(terms, term_name_to_id):
     return False
 
 
-def series(term, sample_to_real_val, sample_to_terms, sample_to_type, sample_to_study, term_name_to_id, blacklist_terms, filter_poor=True, filter_cell_line=True, filter_differentiated=True):
+def series(term, target_property, sample_to_real_val, sample_to_terms, sample_to_type, 
+        sample_to_study, term_name_to_id, blacklist_terms, 
+        filter_poor=True, filter_cell_line=True, filter_differentiated=True,
+        target_unit=None, value_limit=None, skip_missing_unit=False
+    ):
     age_to_samples = defaultdict(lambda: set())
     for sample, real_val_infos in sample_to_real_val.items():
         if sample not in sample_to_terms:
@@ -46,11 +51,13 @@ def series(term, sample_to_real_val, sample_to_terms, sample_to_type, sample_to_
             property_ = real_val_info['property']
             unit = real_val_info['unit']
             value = int(real_val_info['value'])
+            if target_unit and unit != target_unit:
+                continue
             poor_samples = set()
             cell_line_samples = set()
             differentiated_samples = set()
-            if property_ == 'age':
-                if value > 100:
+            if property_ == target_property:
+                if value_limit and value > value_limit:
                     continue
                 terms = sample_to_terms[sample]
                 if len(blacklist_terms & set(sample_to_terms[sample])) > 0:
@@ -243,7 +250,7 @@ def main():
 
     blacklist_terms = set(['disease', 'disease of cellular proliferation'])
 
-    age_to_samples, df = series(term, sample_to_real_val, sample_to_terms,             
+    age_to_samples, df = series(term, 'age', sample_to_real_val, sample_to_terms,             
         sample_to_type, sample_to_study, term_name_to_id, blacklist_terms, 
         filter_poor=False, filter_cell_line=True, filter_differentiated=True
     )
@@ -266,7 +273,7 @@ def main():
     """
 
     
-
+    """
     term = 'glioblastoma multiforme' # A good one
     case, control = term_to_run(sample_to_terms, term)
     blacklist_terms = set(['disease', 'disease of cellular proliferation'])
@@ -280,9 +287,8 @@ def main():
     df.to_csv('glioblastoma_multiforme_case_control.csv')
     #print(df)
     #print('Tissue intersections: %s' % tissue_intersections)
-    
     print(select_case_control_experiment_set(df, 'case', 'blood'))
-
+    """
 
 if __name__ == "__main__":
     main() 
