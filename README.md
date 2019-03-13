@@ -39,7 +39,7 @@ The Docker image contains <this software> as well as a webserver and FTP server 
 
 ### Simple Expression Analysis
 
-![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Expression/progress_report.png?raw=true "Title")
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Expression/flow.png?raw=true "Title")
 
 ### Splice-it-Up! (Detection and Validation of Novel Exons from Raw Data)
 
