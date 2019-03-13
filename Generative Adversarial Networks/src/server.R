@@ -28,14 +28,12 @@ function(input, output, session) {
     myvec <- read.csv("/tmp/gan_visualization.csv", header=FALSE) # (n + 1) * 1
     case_control <- myvec[1,length(myvec)]
     normalized_counts <- myvec[1,1:length(myvec)-1]
-    print(case_control)
-    print(normalized_counts[,0:10])
-    
     mymat <- read.csv("/tmp/gan_pca_mat.csv", header = FALSE) # n * 2
-    coors <- as.matrix(normalized_counts) %*% t(as.matrix(mymat))
+    as.matrix(normalized_counts) %*% t(as.matrix(mymat))
   })
+  coors = (as.data.frame(matrix(data=c(1,1))))
   output$r <- renderPlot({
-    ggplot(data = coors, aes(x=coors[1,1],y=coors[1,2], size=4))+
+    ggplot(data = coors, aes(x=coors[1,1],y=coors[2,1], size=4))+
       geom_point()
     })
   
