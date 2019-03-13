@@ -1,5 +1,6 @@
 library(shiny)
 library(ggplot2)
+library(data.table)
 df <- data.frame(matrix(data = 0,ncol = 1, nrow = 200))
 colnames(df) <- "value"
 
@@ -24,12 +25,14 @@ function(input, output, session) {
   })
   
   text_value <- eventReactive(input$run_script, {
-    system("ls")
-    myvec <- read.csv("/tmp/gan_visualization.csv", header=FALSE) # (n + 1) * 1
-    case_control <- myvec[1,length(myvec)]
-    normalized_counts <- myvec[1,1:length(myvec)-1]
-    mymat <- read.csv("/tmp/gan_pca_mat.csv", header = FALSE) # n * 2
-    as.matrix(normalized_counts) %*% t(as.matrix(mymat))
+    latent_vec <- paste(df[, 1], collapse = ",")
+    system(paste("~/gan/run.sh ", latent_vec))
+    myvec <- fread("~/gan/gan_output.csv", sep=",", header = FALSE) # (n + 1) * 1
+    case_control <- myvec[1, length(myvec)]
+    normalized_counts <- myvec[1, 1:length(myvec)-1]
+    mymat <- fread("~/gan/gan_pca_mat.csv", sep=",", header = FALSE) # n * 2
+    coors <- as.matrix(mymat) %*% as.matrix(normalized_counts[1:15])
+    print(coors)
   })
   coors = (as.data.frame(matrix(data=c(1,1))))
   output$r <- renderPlot({
