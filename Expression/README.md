@@ -5,19 +5,15 @@
 
 ## PCA_counts
 Example:<br/>
-python3 counts_pca.py --projname *PROJNAME* --df *ERP000546_genecounts.txt* --md *meta_data.tsv* --review
+python3 counts_pca.py --case *flag* --input *string* --name *string*
 
-### --projname (str)
-Name of SRA project 
+### --case (flag)
+Flag if projects are case/controlled 
 
-### --df (str)
-Path to dataframe containing gene counts for all samples within the project
-
-### --md (str)
-Path to metadata file for all samples in project
-
-### --review (flag)
-Either keep outliers and update metadata file, or simply remove
+### --input (str)
+Path to input data
+### --name (str)
+custom name given to project
 
 ### OUTPUT
 
