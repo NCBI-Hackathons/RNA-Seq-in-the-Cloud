@@ -15,7 +15,7 @@ def data_process(data_file,metadata_file,metadata_OI):
 
     metadata_df = pd.read_csv(metadata_file, sep='\t') #'~/Downloads/DESeq2_POE_data.csv'
     # print(metadata_df.head())
-    metadata_df.index = metadata_df['Run']
+    # metadata_df.index = metadata_df['Run']
 
     col_not_counts = 8
     norm_df = data_df.iloc[:,col_not_counts:]
@@ -79,9 +79,6 @@ def get_args():
     return args
 
 if __name__ == '__main__':
-    # data_df, metadata_df = data_process(argv[1], argv[2], argv[3])
-    # print('hi')
-
     args = get_args()
     data_df, metadata_df, metadata_OI = data_process(args.count_data, args.attributes, args.metadata)
 
@@ -91,7 +88,7 @@ if __name__ == '__main__':
 
     app.layout = html.Div([
         dcc.Graph(
-            id='scatter2d',
+            id='scatter3d',
             figure={
                 'data': generate_traces(data_df,metadata_df,metadata_OI)[0],
 
