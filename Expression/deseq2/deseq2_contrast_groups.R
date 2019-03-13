@@ -13,12 +13,12 @@ option_list <- list (
         help="The attributes file for info on each run [default %default]"),
 
     make_option (c("-t","--type"),
-        default=NA,
         help="A string matching a sample type in the 'type' column of the attributes file [default %default]"),
     
     make_option (c("-ols","--outliers"),
-                 default="F",
-                 help="'T' to include runs identified as outliers, 'F' to exclude outliers [default %default]"),
+                 default=FALSE,
+                 action="store_true",
+                 help="Use flag to include outliers. [default %default]"),
     
     make_option (c("-o","--outdir"),
                  default="/home/jmcgirr/output/",
@@ -30,7 +30,8 @@ opt  <- parse_args(
     OptionParser(#usage= "usage: %prog [options]",
         option_list=option_list)
         )
-
+print(opt$outliers)
+print(opt$type)
 suppressPackageStartupMessages(library(DESeq2))
 
 ############################################
@@ -70,7 +71,7 @@ group2s <- c("case")
 ############################################
 
 atts <- read.table(atts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
-atts <- atts[which(atts$type == opt$type),]
+atts <- atts[which(atts$type == opt$type & atts$is_outlier == "False"),]
 counts <- read.table(counts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
 rownames(counts) <- counts[,1]
 counts <- counts[,-1]
@@ -80,11 +81,11 @@ rownames(atts) <- atts[,1]
 atts <- atts[,-1]
 atts <- as.matrix(atts)
 
-if (opt$ols == "F")
+if (opt$outliers)
 {
   atts <- read.table(atts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
-  atts <- atts[which(atts$type == opt$type & atts$is_outlier == "False"),]
   counts <- read.table(counts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+  atts <- atts[which(atts$type == opt$type),]
   rownames(counts) <- counts[,1]
   counts <- counts[,-1]
   keeps <- names(counts)[(names(counts) %in% atts$Run)]
@@ -101,7 +102,7 @@ nrow(atts)
 dds <- DESeqDataSetFromMatrix(countData = counts,
                               colData = atts,
                               design= ~condition+project)
-dds$condition <- factor(dds$condition, levels = c(group1s[i],group2s[i]))
+dds$condition <- factor(dds$condition, levels = c("control","case"))
 
 dds <- estimateSizeFactors(dds)
 idx <- rowSums(counts(dds, normalized=TRUE) >= 2 ) >= 2
