@@ -6,6 +6,10 @@ import sys
 import os
 import re
 
+if len(sys.argv) !=2 or sys.argv[1] in ['-h', '--h', '-help', '--help']:
+    print("Usage: cat <input_file> | import_tx_alignment_exons.py <output_file>")
+    sys.exit()
+    
 infile = sys.stdin
 outfile = sys.argv[1]
 
