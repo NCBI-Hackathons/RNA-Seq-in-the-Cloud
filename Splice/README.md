@@ -17,7 +17,7 @@ Before use, it is recommended to preprocess your data (fastq? gtf?) through our 
 
 ### Prerequisites
 
-input: GTF
+input: GTF<br/>
 dependencies: python 3.6.1, pandas, numpy, csv
 
 ```
