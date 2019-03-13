@@ -15,7 +15,7 @@ def data_process(data_file,metadata_file,metadata_OI):
 
     metadata_df = pd.read_csv(metadata_file, sep='\t') #'~/Downloads/DESeq2_POE_data.csv'
     # print(metadata_df.head())
-    # metadata_df.index = metadata_df['Run']
+    metadata_df.index = metadata_df['Run']
 
     col_not_counts = 8
     norm_df = data_df.iloc[:,col_not_counts:]
