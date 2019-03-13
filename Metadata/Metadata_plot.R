@@ -1,0 +1,20 @@
+hack_data <- read.table(file = "./data/experiment_to_terms.tsv", header = FALSE, sep = "\t")
+library(rjson)
+query_disease_samples <- fromJSON(file = "./data/term-in.json")
+
+
+query_disease_metadata <- subset(hack_data, V1 %in% query_disease_samples)
+
+query_disease_metadata_table <- as.data.frame(table(query_disease_metadata$V2)) 
+
+query_disease_metadata_sorted <- query_disease_metadata_table[order(query_disease_metadata_table$Freq, decreasing = TRUE),]
+
+query_disease_metadata_sorted$percentage <- query_disease_metadata_sorted$Freq/query_disease_metadata_sorted[1,2]
+query_disease_metadata_top10 <- query_disease_metadata_sorted[which(query_disease_metadata_sorted$percentage >= 0.1),]
+
+query_disease_metadata_top10$Metadata <- query_disease_metadata_top10$Var1
+
+library(ggplot2)
+
+p <-ggplot(query_disease_metadata_top10, aes(Metadata, percentage)) + geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))

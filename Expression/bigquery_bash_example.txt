@@ -1,0 +1,15 @@
+   46  bq show rnaseq.runinfo
+   48  bq show strides-sra-hackathon-data:rnaseq.genecounts
+   58  bq query --project_id strides-sra-hackathon-data --max_rows 10 --nouse_legacy_sql "select distinct tumor from rnaseq.runinfo"
+   66  bq query --project_id strides-sra-hackathon-data --max_rows 10 --nouse_legacy_sql "select * from rnaseq.runinfo where SRAstudy  = 'ERP003613'"
+   67  bq query --project_id strides-sra-hackathon-data --max_rows 10 --nouse_legacy_sql "select * from rnaseq.runinfo where SRAstudy  = 'ERP000546'"
+   73  bq query --project_id strides-sra-hackathon-data --nouse_legacy_sql "select count(*) from rnaseq.runinfo where SRAstudy  = 'ERP003613'" 
+   74  bq query --project_id strides-sra-hackathon-data --nouse_legacy_sql "select count(*) from rnaseq.runinfo where SRAstudy  = 'ERP000546'" 
+   81  bq query --project_id strides-sra-hackathon-data --nouse_legacy_sql "select srastudy, run from rnaseq.runinfo where SRAstudy in ('ERP000546', 'ERP003613') order by srastudy" |wc
+   82  bq query --project_id strides-sra-hackathon-data --nouse_legacy_sql "select * from rnaseq.runinfo where SRAstudy in ('ERP000546', 'ERP003613') order by srastudy"
+   86  bq query --project_id strides-sra-hackathon-data --max_rows 10 --nouse_legacy_sql "select * from rnaseq.genecounts" 
+   87  bq query --project_id strides-sra-hackathon-data --max_rows 10 --nouse_legacy_sql "select * from rnaseq.genecounts as gc join rnaseq.runinfo as ri on gc.accession = ri.run where ri.run = 'ERR315487'" 
+   88  bq query --project_id strides-sra-hackathon-data --max_rows 10 --nouse_legacy_sql "select gc.* from rnaseq.genecounts as gc join rnaseq.runinfo as ri on gc.accession = ri.run where ri.run = 'ERR315487'" 
+   92  bq query --project_id strides-sra-hackathon-data --max_rows 10 --nouse_legacy_sql "select count (distinct gene) from rnaseq.genecounts "
+   95  bq query --project_id strides-sra-hackathon-data --max_rows 10 --nouse_legacy_sql "select gc.* from rnaseq.genecounts as gc join rnaseq.runinfo as ri on gc.accession = ri.run where ri.SRAstudy in ('ERP000546', 'ERP003613')"
+  109  bq query --project_id strides-sra-hackathon-data --format csv --max_rows 1000000000 --nouse_legacy_sql "select ri.srastudy, gc.* from rnaseq.genecounts as gc join rnaseq.runinfo as ri on gc.accession = ri.run where ri.SRAstudy in ('ERP000546', 'ERP003613')"   > all_3_col.csv
