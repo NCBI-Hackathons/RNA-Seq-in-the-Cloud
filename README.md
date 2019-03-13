@@ -2,8 +2,6 @@
 
 ## Please cite our work -- (citation)
 
-![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/unc_hackathon_2019.png?raw=true "Title")
-
 ## An Indexing System for All Public RNAseq Data.  An Attached User Interface!
 
 ### Please Scroll down for TOC
@@ -48,3 +46,7 @@ The Docker image contains <this software> as well as a webserver and FTP server 
 ### Splice-it-Up! (Detection and Validation of Novel Exons from Raw Data)
 
 ![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Screen%20Shot%202019-03-12%20at%202.56.15%20PM.png?raw=true "Title")
+
+## One of the Original Advertisements -- courtesy Kimiko Suzuki
+
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/unc_hackathon_2019.png?raw=true "Title")
