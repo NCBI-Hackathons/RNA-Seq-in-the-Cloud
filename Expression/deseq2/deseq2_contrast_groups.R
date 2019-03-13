@@ -74,13 +74,13 @@ atts <- read.table(atts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t
 atts <- atts[which(atts$type == opt$type & atts$is_outlier == "False"),]
 
 # subset data for speed
-atts_cas <- atts[which(atts$condition == "case"),]
-atts_con <- atts[which(atts$condition == "control"),]
-
-atts <- rbind(atts_cas[sample(nrow(atts_cas), 9), ],
-              atts_con[sample(nrow(atts_con), 9), ])
-atts <- atts[order(atts$Run),]
-
+# atts_cas <- atts[which(atts$condition == "case"),]
+# atts_con <- atts[which(atts$condition == "control"),]
+# 
+# atts <- rbind(atts_cas[sample(nrow(atts_cas), 9), ],
+#               atts_con[sample(nrow(atts_con), 9), ])
+# atts <- atts[order(atts$Run),]
+# 
 #
 atts_cas <- atts[which(atts$condition  == "case"),]
 atts_con <- atts[which(atts$condition  == "control"),]
@@ -99,12 +99,16 @@ if (opt$outliers)
   atts <- read.table(atts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
   counts <- read.table(counts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
   atts <- atts[which(atts$type == opt$type),]
+  atts <- atts[order(atts$Run),]
+  atts_cas <- atts[which(atts$condition  == "case"),]
+  atts_con <- atts[which(atts$condition  == "control"),]
   rownames(counts) <- counts[,1]
   counts <- counts[,-1]
   keeps <- names(counts)[(names(counts) %in% atts$Run)]
   counts <- counts[, keeps]
-  rownames(atts) <- atts[,1]
-  atts <- atts[,-1]
+  counts <- counts[ , order(names(counts))]
+  rownames(atts) <- atts$Run
+  atts$Run <- NULL
   atts <- as.matrix(atts)
 }
 
