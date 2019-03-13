@@ -1,3 +1,7 @@
+# Splice It Up!
+The idea is to de-noise the overwhelming database of assumed novel transcripts and to identify true novel transcripts of high confidence. Such true novel transcripts are the intersects of the novel transcripts confirmed by three approaches, which are the three main parts as described below.
+
+
 # Detection of Novel Exons
 
 It is clear from the proteomic diversity and functional complexity of higher order organisms 
@@ -50,4 +54,11 @@ python TSS_support.py exon_novel_gtf_file.gtf.tsv
 Output: tight_novel_exon_novel_gtf_file.gtf.tsv.tsv     (strand-specific*)
         (chr, strand of transcript, transcriptID, strand of CAGE peak, CAGE peak ID)
         
-        
+To find p1 or p1-fusion CAGE peaks in the output file from the previos step:
+```
+bash p1_finder.sh
+```
+Output in shell: "tight_novel_exon_novel_gtf_file.gtf.tsv.tsv
+                  x out of y"
+                  where x = #transcripts with p1 peaks, y = #total transcripts.
+
