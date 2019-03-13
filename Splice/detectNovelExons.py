@@ -69,7 +69,6 @@ def generateGenCodeHash(genEx):
                 else:
                     genCode[exonKey] = []
                     genCode[exonKey].append(tx_id)
-    print("finished Gen Hash")
     return genCode
 
 def genAnnotatedHash(a):
