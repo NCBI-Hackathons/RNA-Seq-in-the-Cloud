@@ -21,12 +21,16 @@ Build the Docker image (This step can be skipped when the Docker image has been 
 sudo docker build -t ncbihackathons/viz-notebook .
 ```
 
-Run Jupyter Lab via Docker container
+Run Jupyter Lab via Docker container:
 ```bash
 sudo docker run -it -v $(pwd):/home/jovyan/work --rm -p 8888:8888 ncbihackathons/viz-notebook jupyter-lab
 ```
 
-If you want to enter bash in the container
+If you want to enter bash in the container:
 ```
 sudo docker run -it -v $(pwd):/home/jovyan/work --rm -p 8888:8888 ncbihackathons/viz-notebook /bin/bash
+```
+To run PCA dash app:
+```bash
+python PCA_dash_app -cd /path/to/results/table.txt -a /path/to/attributes/table.txt -m metadata
 ```
