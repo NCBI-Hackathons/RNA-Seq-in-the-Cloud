@@ -80,3 +80,8 @@ Output in shell: "tight_novel_exon_novel_gtf_file.gtf.tsv.tsv
                   x out of y"
                   where x = #transcripts with p1 peaks, y = #total transcripts.
 
+# Detection of Novel Transcripts with intron structure
+
+## Getting Started
+
+### Prerequisites
