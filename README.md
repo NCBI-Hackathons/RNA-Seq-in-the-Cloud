@@ -14,7 +14,7 @@
 
 We provide two installation options for using the indexing system: Docker or directly from Github.
 
-A simple Jupyter notebook for using indexed data can be found <here> or <here>
+A simple Jupyter notebook for using public data can be found on this repo, or in binder at the link above!
 
 ## Docker
 
