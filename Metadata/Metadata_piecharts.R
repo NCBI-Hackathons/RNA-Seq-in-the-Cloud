@@ -109,4 +109,4 @@ query_male_female_pie <- c(male_prop, female_prop, 1 - (male_prop + female_prop)
 pie_male_female_labels <- c("male", "female", "no information")
 pie_male_female <- pie(query_male_female_pie, labels = pie_male_female_labels, main="Sex", col = rainbow(length(query_male_female_pie)))
 
-piecharts
+#piecharts
