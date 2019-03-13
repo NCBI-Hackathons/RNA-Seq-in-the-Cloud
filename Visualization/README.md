@@ -1,7 +1,7 @@
 # Team ViZWiZ
 
 Link to the mybinder version of the github
-https://mybinder.org/v2/gh/NCBI-Hackathons/RNA-Seq-in-the-Cloud/master
+https://mybinder.org/v2/gh/NCBI-Hackathons/RNA-Seq-in-the-Cloud/bd47caa?filepath=%2FVisualization%2FVisualizations.ipynb
 
 PCA
 ![PCA](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Visualization/3D_pca.PNG)
