@@ -8,12 +8,12 @@ function(input, output, session) {
   
   output$ui <- renderUI({
     sliderInput("val", 
-                "Choose the input Value",
-                min = -3, 
-                max = 3, 
-                value = df[input$pos,1],
-                step = 0.01)
-    
+                       "Choose the input Value",
+                       min = -3, 
+                       max = 3, 
+                       value = df[input$pos,1],
+                      step = 0.01)
+           
     
   })
   
@@ -32,12 +32,17 @@ function(input, output, session) {
     normalized_counts <- myvec[1, 1:length(myvec)-1]
     mymat <- fread("~/gan/gan_pca_mat.csv", sep=",", header = FALSE) # n * 2
     coors <- as.matrix(mymat) %*% as.matrix(normalized_counts[1:15])
-    print(coors)
+    write.csv(coors, "~/gan/coordinates.csv", row.names = FALSE)
+    coors
   })
-  coors = (as.data.frame(matrix(data=c(1,1))))
+  
+  coors <- read.csv("~/gan/coordinates.csv")
   output$r <- renderPlot({
     ggplot(data = coors, aes(x=coors[1,1],y=coors[2,1], size=4))+
-      geom_point()
-    })
+      geom_point()+
+      coord_cartesian(xlim = c(-1500, 1500), ylim = c(-1500, 1500))
+  })
+
+  output$r2 <- renderPrint({text_value()})
   
 }

@@ -17,7 +17,8 @@ fluidPage(
 
     column(7,
            plotOutput("distPlot"),
-           verbatimTextOutput("r")
+           plotOutput("r"),
+           verbatimTextOutput("r2")
     )
   )
 )
