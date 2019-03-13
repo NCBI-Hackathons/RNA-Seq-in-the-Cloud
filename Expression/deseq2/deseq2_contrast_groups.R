@@ -12,9 +12,17 @@ option_list <- list (
         default="/home/tommerschwarz/data/ERP000546_attributes.txt",
         help="The attributes file for info on each run [default %default]"),
 
+    make_option (c("-t","--type"),
+        default=NA,
+        help="A string matching a sample type in the 'type' column of the attributes file [default %default]"),
+    
+    make_option (c("-ols","--outliers"),
+                 default="T",
+                 help="'T' to include runs identified as outliers, 'F' to exclude outliers [default %default]"),
+    
     make_option (c("-o","--outdir"),
-        default="/home/jmcgirr/output/",
-        help="The attributes file for info on each run [default %default]")
+                 default="/home/jmcgirr/output/",
+                 help="The attributes file for info on each run [default %default]")
     )
 
 
@@ -47,24 +55,44 @@ show.warnings=TRUE
 setwd(out_path)
 
 # local
-#counts_path <- "C:/Users/jmcgirr/Documents/GitHub/RNA-Seq-in-the-Cloud/Expression/deseq2/data/ERP000546_genecounts.txt"
-#atts_path <- "C:/Users/jmcgirr/Documents/GitHub/RNA-Seq-in-the-Cloud/Expression/deseq2/data/ERP000546_attributes.txt"
+counts_path <- "C:/Users/jmcgirr/Desktop/joint_genecounts.txt"
+atts_path <- "C:/Users/jmcgirr/Desktop/joint_metadata.txt"
 
 # What groups do we want to compare?
 # Which column in the attributes should be compared?
 att_cols <- c("condition")
-group1s <- c("case")
-group2s <- c("control")
+group1s <- c("control")
+group2s <- c("case")
 
 #####
 ############################################
-###### Create DESeq2 object and run ########
+### Create DESeq2 object and run contrast ##
 ############################################
 
+atts <- read.table(atts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+atts <- atts[which(atts$type == opt$type),]
 counts <- read.table(counts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
 rownames(counts) <- counts[,1]
 counts <- counts[,-1]
-atts <-as.matrix(read.table(atts_path ,header = TRUE,row.names=1, sep = "\t"))
+keeps <- names(counts)[(names(counts) %in% atts$Run)]
+counts <- counts[, keeps]
+rownames(atts) <- atts[,1]
+atts <- atts[,-1]
+atts <- as.matrix(atts)
+
+if (opt$ols == "F")
+{
+  atts <- read.table(atts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+  atts <- atts[which(atts$type == opt$type & atts$is_outlier == "False"),]
+  counts <- read.table(counts_path, header = TRUE, stringsAsFactors = FALSE, sep = "\t")
+  rownames(counts) <- counts[,1]
+  counts <- counts[,-1]
+  keeps <- names(counts)[(names(counts) %in% atts$Run)]
+  counts <- counts[, keeps]
+  rownames(atts) <- atts[,1]
+  atts <- atts[,-1]
+  atts <- as.matrix(atts)
+}
 
 ncol(counts)
 nrow(atts)
@@ -72,7 +100,8 @@ nrow(atts)
 # create DESeq Object
 dds <- DESeqDataSetFromMatrix(countData = counts,
                               colData = atts,
-                              design= ~condition)
+                              design= ~condition+project)
+dds$condition <- factor(dds$condition, levels = c(group1s[i],group2s[i]))
 
 dds <- estimateSizeFactors(dds)
 idx <- rowSums(counts(dds, normalized=TRUE) >= 2 ) >= 2
