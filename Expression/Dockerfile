@@ -1,6 +1,6 @@
 FROM bioconductor/release_core2:R3.5.2_Bioc3.8
 
-
+# builds 
 
 ENV DEBIAN_FRONTEND=noninteractive 
 
@@ -8,6 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # The Bioconductor core already includes a specific version of BioC and R
 
 RUN apt-get -y  install \
+    xsltproc \ 
     libxml2-utils \
     python3-pip 
 

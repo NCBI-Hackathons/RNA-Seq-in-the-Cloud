@@ -149,7 +149,6 @@ def match_case_to_controls(term, control_samples, case_samples, sample_to_terms,
             control_term_to_samples[term].add(sample)
     for sample in case_samples:
         terms = sample_to_terms[sample]
-        print(terms)
         for term in terms:
             case_term_to_samples[term].add(sample)    
 
@@ -167,7 +166,6 @@ def match_case_to_controls(term, control_samples, case_samples, sample_to_terms,
     # identify tissue common variables
     intersect_terms = set(control_term_to_samples.keys()) \
         & set(case_term_to_samples.keys())
-    print('Intersect terms: %s' % intersect_terms)
     term_to_partition = {}
     tissue_intersections = set()
     for term in intersect_terms:
@@ -246,7 +244,7 @@ def match_case_to_controls(term, control_samples, case_samples, sample_to_terms,
     return df, control_confound, case_confound, tissue_intersections
 
 def select_case_control_experiment_set(df, case_control, term):
-    return list(df.loc[(df['condition'] == case_control) & (df['type'] == term), 'experiment_accession'])
+    return list(df.loc[(df['condition'] == case_control) & (df['type'] == term), 'experiment'])
 
 def main():
     with open('./data/experiment_to_terms.json', 'r') as f:
