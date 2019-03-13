@@ -40,15 +40,13 @@ autoplot(prcomp(combined_dataset_2), colour = 'newcolumn', label = TRUE, label.s
 autoplot(prcomp(combined_dataset), colour = 'newcolumn', shape = FALSE, label.size = 3)
 autoplot(prcomp(combined_dataset_2), colour = 'newcolumn', shape = FALSE, label.size = 3)
 
-# Get PCA information
-library("factoextra")
+# Summary
+summary_normalized <- prcomp(combined_dataset)
+summary_raw <- prcomp(combined_dataset_2)
 
-# Extract the results for variables and individuals
-result_normalized <- get_pca(combined_dataset)
-result_raw <- get_pca(combined_dataset_2)
+write.csv(summary_normalized, "result_normalized.csv")
+write.csv(summary_raw, "result_raw.csv")
 
-write.csv(result_normalized, "result_normalized.csv")
-write.csv(result_raw, "result_raw.csv")
 
 
 
