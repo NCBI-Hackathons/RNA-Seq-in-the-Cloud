@@ -2,15 +2,11 @@
 
 ## Please cite our work -- (citation)
 
-![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/unc_hackathon_2019.png?raw=true "Title")
-
 ## An Indexing System for All Public RNAseq Data.  An Attached User Interface!
 
 ### Please Scroll down for TOC
 
-### How to use this software
-
-#### Software Workflow Diagram 
+#### Software Workflow Diagram (Initial Plan) 
 
 ![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/IMG_20190311_105938266.jpg?raw=true "Title")
 
@@ -18,7 +14,7 @@
 
 We provide two installation options for using the indexing system: Docker or directly from Github.
 
-A simple Jupyter notebook for using indexed data can be found <here> or <here>
+A simple Jupyter notebook for using public data can be found on this repo, or in binder at the link above!
 
 ## Docker
 
@@ -48,3 +44,7 @@ The Docker image contains <this software> as well as a webserver and FTP server 
 ### Splice-it-Up! (Detection and Validation of Novel Exons from Raw Data)
 
 ![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Screen%20Shot%202019-03-12%20at%202.56.15%20PM.png?raw=true "Title")
+
+## One of the Original Advertisements -- courtesy Kimiko Suzuki
+
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/unc_hackathon_2019.png?raw=true "Title")
