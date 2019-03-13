@@ -17,7 +17,7 @@ option_list <- list (
         help="A string matching a sample type in the 'type' column of the attributes file [default %default]"),
     
     make_option (c("-ols","--outliers"),
-                 default="T",
+                 default="F",
                  help="'T' to include runs identified as outliers, 'F' to exclude outliers [default %default]"),
     
     make_option (c("-o","--outdir"),
@@ -55,8 +55,8 @@ show.warnings=TRUE
 setwd(out_path)
 
 # local
-counts_path <- "C:/Users/jmcgirr/Desktop/joint_genecounts.txt"
-atts_path <- "C:/Users/jmcgirr/Desktop/joint_metadata.txt"
+#counts_path <- "C:/Users/jmcgirr/Desktop/joint_genecounts.txt"
+#atts_path <- "C:/Users/jmcgirr/Desktop/joint_metadata.txt"
 
 # What groups do we want to compare?
 # Which column in the attributes should be compared?
