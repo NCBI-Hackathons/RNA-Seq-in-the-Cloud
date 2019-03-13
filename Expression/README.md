@@ -49,26 +49,26 @@ Users can compare expression across multiple tissue types and conditions by runn
 The DESEq model design includes include sample types (tissue, age, sex) and project IDs as factors (design = ~ projectID+sample type).
 Users will define case vs. control comparisons to analyze with the --type flag by specifying a variable in the 'type' column of metaData.txt. This script will output 'control_vs_case.txt' containing log fold changes in expression between cases and controls matching matching the --type option. The output also contains p-values for each gene and depth normalized read counts for each gene for each sample. Only genes with at least two read counts across all samples are used for analysis.
 
-Flags:
---counts
+### Flags:
+#### --counts
 nxm table where n=genes and m=counts for each run
 
---attributes
+#### --attributes
 nxm table where n=runs and m=meta data attributes (type, condition, project, outlier)
 type is usually a tissue type (but can also be age, sex, etc.)
 condition is either case or control (usually meaning healthy or disease samples)
 project is the SRA project 
 outlier is True or False and determined upstream in the pipeline
 
---type
+#### --type
 MUST be defined!
 MUST correspond to a variable in the 'type' column of the attribute table
 For example, --type liver
 
---outliers
+#### --outliers
 Include this flag if you want to perform analysis including outliers determined upstream in the pipeline
-\n
---outdir
+
+#### --outdir
 path to output directory that will be created
 default is the working directory
 
