@@ -331,7 +331,13 @@ def generate(model_file, output_file, n_samples):
     generator_model = load_model(model_file)
     generate_samples(generator_model, output_file)
 
-                         
+
+def visualize(model_file, output_file, latent_vector):
+    generator_model = load_model(model_file)
+    test_sample_stack = generator_model.predict(np.array(latent_vector.split(",")).astype(np.float32).reshape(1,200))
+    np.savetxt(output_file, test_sample_stack, delimiter=",")
+    
+    
 def mkdirs(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -346,7 +352,11 @@ def train2(args):
 def generate2(args):
     generate(args.model_file, args.output_file, args.n_samples)
 
-                         
+    
+def visualize2(args):
+    visualize(args.model_file, args.output_file, args.latent_vector)
+
+    
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process some integers.')
 
@@ -365,6 +375,12 @@ if __name__ == "__main__":
     parser_generate.add_argument("--n_samples", required=True, help="number of synthetics samples to be generated")
     parser_generate.add_argument('--output_file', required=True, help='output file')
     parser_generate.set_defaults(func=generate2)
+
+    parser_generate = subparsers.add_parser("generate_with_latent_vector", help="visualize help")
+    parser_generate.add_argument("--model_file", required=True, help="model file")
+    parser_generate.add_argument("--latent_vector", required=True, help="csv latent vector 200 dim")
+    parser_generate.add_argument('--output_file', required=True, help='output file')
+    parser_generate.set_defaults(func=visualize2)
 
     args = parser.parse_args()
 
