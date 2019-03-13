@@ -12,10 +12,10 @@ accessions %<>%
 
 library(SRAdb)
 # These lines take forever. Don.t load twice.
-# sqlfile <- file.path(system.file('extdata', package='SRAdb'), 'SRAmetadb_demo.sqlite')
-# timeStart <- proc.time()
-# sqlfile <- getSRAdbFile()
-# proc.time() - timeStart
+sqlfile <- file.path(system.file('extdata', package='SRAdb'), 'SRAmetadb_demo.sqlite')
+timeStart <- proc.time()
+sqlfile <- getSRAdbFile()
+proc.time() - timeStart
 
 # connect
 sra_con <- dbConnect(SQLite(),sqlfile)
@@ -31,4 +31,23 @@ possible_cancer_samples %<>% select(experiment, study_title, study_abstract, stu
 
 possible_cancer_samples$normals_description <- grepl("normal", possible_cancer_samples$description, ignore.case = TRUE)
 possible_cancer_samples$tumors_description <- grepl("tumor", possible_cancer_samples$description, ignore.case = TRUE)
-View(possible_cancer_samples)
+# View(possible_cancer_samples)
+
+hack_data <- read.table(file = "RNA-Seq-in-the-Cloud/Metadata/data/experiment_to_terms.tsv", header = FALSE, sep = "\t")
+
+possible_cancer_samples <- unique(possible_cancer_samples$experiment)
+
+query_disease_metadata <- subset(hack_data, possible_cancer_samples %in% hack_data$V1)
+
+query_disease_metadata_table <- as.data.frame(table(query_disease_metadata$V2)) 
+
+query_disease_metadata_sorted <- query_disease_metadata_table[order(query_disease_metadata_table$Freq, decreasing = TRUE),]
+
+query_disease_metadata_sorted$percentage <- query_disease_metadata_sorted$Freq/query_disease_metadata_sorted[1,2]
+query_disease_metadata_top10 <- query_disease_metadata_sorted[which(query_disease_metadata_sorted$percentage >= 0.1),]
+
+query_disease_metadata_top10$Metadata <- query_disease_metadata_top10$Var1
+
+ggplot(query_disease_metadata_top10, aes(Metadata, percentage)) + geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) + ggtitle("Metadata of Possible Cancer Samples")
+
