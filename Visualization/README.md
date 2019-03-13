@@ -16,7 +16,7 @@ Volcano Plot
 ### Running with Docker
 
 Build the Docker image (This step can be skipped when the Docker image has been pushed to Docker Hub)  
-*must be in `Visulalization` directory*
+*must be in `Visualization` directory*
 ```bash
 sudo docker build -t ncbihackathons/viz-notebook .
 ```
