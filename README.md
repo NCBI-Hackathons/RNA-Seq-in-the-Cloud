@@ -43,7 +43,7 @@ The Docker image contains <this software> as well as a webserver and FTP server 
 
 ### Splice-it-Up! (Detection and Validation of Novel Exons from Raw Data)
 
-![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Screen%20Shot%202019-03-12%20at%202.56.15%20PM.png?raw=true "Title")
+![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/RNA-Seq-in-the-Cloud/Splice/novel_splice_sites.pdf?raw=true "Title")
 
 ## One of the Original Advertisements -- courtesy Kimiko Suzuki
 
