@@ -6,9 +6,7 @@
 
 ### Please Scroll down for TOC
 
-### How to use this software
-
-#### Software Workflow Diagram 
+#### Software Workflow Diagram (Initial Plan) 
 
 ![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/IMG_20190311_105938266.jpg?raw=true "Title")
 
