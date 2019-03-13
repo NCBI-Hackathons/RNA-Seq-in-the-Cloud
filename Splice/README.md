@@ -31,15 +31,23 @@ strand-specific*:if strand is -, then it is actually the last exon. Same notatio
 
 ## Getting Started 
 
-Input: .gtf file
 Dependencies: python 3.6.4, csv, collections
 
 ### Command Line Samples
 
 To extract nove transcripts that satisfy: 1) have at least 1 intron, 2) (strand-specifc) first exon is not referenced:
+Input: .gtf file
 ```
 python intronless_exon.py gtf_file.gtf
 ```
 Output: exon_novel_gtf_file.gtf.tsv       (strand-specific*)
         (chr, strand, start of first exon, stop of first exon, strand, transcriptID)
+
+To match the start(stop if anti-strand) positions of the exons outputed from above with a CAGE cluster / extended CAGE cluster:
+```
+python TSS_support.py exon_novel_gtf_file.gtf.tsv
+```
+Output: tight_novel_exon_novel_gtf_file.gtf.tsv.tsv     (strand-specific*)
+        (chr, strand of transcript, transcriptID, strand of CAGE peak, CAGE peak ID)
+        
         
