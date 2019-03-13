@@ -108,8 +108,10 @@ def writeLogFile(f,txC,tEx,filEx,anEx):
             
 ########################## INIT ###############################################
 
-humGenCode = "./GenCode/gencode.v29.annotation.gtf"
-annF = "./ourAlignments/all_tx_unique_exons.tsv.gz"
+humGenCode = False
+annF = False
+genH ={}
+anH ={}
 
 if humGenCode:
     print("Generating Gencode Exon Information")
@@ -118,6 +120,7 @@ if humGenCode:
 if annF:
     print("Generating Annotated Exon Information")
     aH = genAnnotatedHash(annF)
+
 
 expGTFs = glob("/data/study_gtf/*.gtf")
 
@@ -176,16 +179,16 @@ for f in expGTFs:
     print("# of total lines: {0}".format(txCount))
     print("# of total exons: {0}".format(numOfExons))
 #    print("preprocessing found {} novel exons".format(len(exonTxH)))   
-    filteredTx = examineRetainedIntrons(exonTxH,allExonCoords)
-    print("preprocessing found {} novel exons".format(len(filteredTx)))
+    #filteredTx = examineRetainedIntrons(exonTxH,allExonCoords)
+    print("preprocessing found {} novel exons".format(len(exonTxH)))
     print("querying genCode for novel exons")
-    genVerExons = queryRef(genH,filteredTx)
+    genVerExons = queryRef(genH,exonTxH)
     print("querying annotated file for novel exons")
-    annVerExons = queryRef(aH,filteredTx)
+    annVerExons = queryRef(aH,exonTxH)
     print("novel exons verified by genCode:{0} ".format(len(genVerExons)))
     print("novel exons verified by annotat:{0} ".format(len(annVerExons)))
     
     writeOutFile(filteredTx,"{0}.allExon.rmRetInts.G.tsv".format(fileName))
     writeOutFile(annVerExons,"{0}.Ann.Gen.rmRetInts.tsv".format(fileName))
     fileName += ".GenCode"
-    writeLogFile(fileName,txCount,numOfExons,len(filteredTx),len(annVerExons))
+    writeLogFile(fileName,txCount,numOfExons,len(exonTxH),len(annVerExons))
