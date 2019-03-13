@@ -67,7 +67,7 @@ For example, --type liver
 
 --outliers
 Include this flag if you want to perform analysis including outliers determined upstream in the pipeline
-
+\n
 --outdir
 path to output directory that will be created
 default is the working directory
