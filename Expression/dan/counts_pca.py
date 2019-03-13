@@ -55,9 +55,9 @@ if len(data.columns) > 2:
             is_out[row] = False
     meta_data['is_outlier'] = pd.Series(is_out)
     if args.review:
-        meta_data.to_csv('./{}_metadata_outlierannot.csv'.format(args.projname))
-        data.to_csv('./{}_genecounts.csv'.format(args.projname))
+        meta_data.to_csv('./{}_metadata_outlierannot.txt'.format(args.projname), sep = '\t')
+        data.to_csv('./{}_genecounts.txt'.format(args.projname), sep = '\t')
     else:
         meta_data = meta_data[meta_data['is_outlier']!= True]
-        outlier_removed_df.to_csv('./{}_genecounts_outliersremoved.csv'.format(args.projname))
+        outlier_removed_df.to_csv('./{}_genecounts_outliersremoved.txt'.format(args.projname), sep = '\t')
     print('Found {} outliers'.format(len(outliers[0])))
