@@ -84,6 +84,17 @@ Output in shell: "tight_novel_exon_novel_gtf_file.gtf.tsv.tsv
 
 # Detection of Novel Transcripts with intron structure
 
+
+
 ## Getting Started
 
+
+
 ### Prerequisites
+
+input: GTFs, .tsv.gz alignment file <br/>
+dependencies: python 3.6.1, pandas, numpy, csv , io, os, sys, gzip, argparse, signal, glob
+
+```
+python3 analyze_intron_structure.py
+```
