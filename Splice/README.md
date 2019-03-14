@@ -42,6 +42,8 @@ exons to unique transcript alignment exons. After successful run, three output f
 2. _fileName_ann.tsv: contains all filtered exons, not verified by the transcript alignment file
 3. _fileName.log.out: contains information about the total number of exons, number of filtered exons, and number of verified filtered exons.
 
+""" This script was run as multiple threads simultaneously by using glob patterns ERP* and SRP* ... """
+
 A gtf with roughly 715336 lines takes approximately 3-5 minutes to run (depending on the size of your transcript alignment file, or gencode)
 
 Warning: The Gencode code is still underdevelopment and runs incredibly slow. Use at your own risk. Additionally, the retained intron function may remove relevant transcripts in an effort to be overly conservative. If the outputted exons are too low, I advise not using this function in the filtering step until improvements are made. 
