@@ -42,7 +42,7 @@ exons to unique transcript alignment exons. After successful run, three output f
 2. _fileName_ann.tsv: contains all filtered exons, not verified by the transcript alignment file
 3. _fileName.log.out: contains information about the total number of exons, number of filtered exons, and number of verified filtered exons.
 
-""" This script was run as multiple threads simultaneously by using glob patterns ERP* and SRP* ... """
+``` This script was run as multiple threads simultaneously by using glob patterns ERP* and SRP* ```
 
 A gtf with roughly 715336 lines takes approximately 3-5 minutes to run (depending on the size of your transcript alignment file, or gencode)
 
