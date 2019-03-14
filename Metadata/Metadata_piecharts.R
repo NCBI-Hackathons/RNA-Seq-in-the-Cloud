@@ -24,14 +24,27 @@ if (nrow(query_treatment) == 0) {
 pie_treatment_labels <- c("treatment", "no information")
 pie_treatment <- pie(query_treatment_pie, labels = pie_treatment_labels, main="Treatment", col = rainbow(length(query_treatment_pie)))
 
-query_adult <- query_disease_metadata_sorted[which(query_disease_metadata_sorted$Metadata == "adult"),]
-if (nrow(query_adult) == 0) {
-  query_adult_pie <- c(0.0, 1.0)
-} else {
-    query_adult_pie <- c(query_adult$Proportion, 1 - query_adult$Proportion) 
+query_adult <- query_disease_metadata_sorted[which(query_disease_metadata_sorted$Metadata == "adult organism"),]
+query_embryo <- query_disease_metadata_sorted[which(query_disease_metadata_sorted$Metadata == "embryo"),]
+query_embryonic <- query_disease_metadata_sorted[which(query_disease_metadata_sorted$Metadata == "embryonic cell"),]
+
+adult_prop <- 0.0
+if (nrow(query_adult) > 0) {
+    adult_prop <- query_adult$Proportion
+} 
+
+embryo_prop = 0.0
+if (nrow(query_embryo) > 0) {
+    embryo_prop <- embryo_prop + query_embryo$Proportion
+} 
+if (nrow(query_embryonic) > 0) {
+    embryo_prop <- embryo_prop + query_embryo$Proportion
 }
-pie_adult_labels <- c("adult", "no information")
-pie_adult <- pie(query_adult_pie, labels = pie_adult_labels, main="Adult", col = rainbow(length(query_adult_pie)))
+
+query_adult_pie <- c(adult_prop, embryo_prop, 1 - (adult_prop + embryo_prop)) 
+
+pie_adult_labels <- c("adult", "embryonic", "no information")
+pie_adult <- pie(query_adult_pie, labels = pie_adult_labels, main="Developmental stage", col = rainbow(length(query_adult_pie)))
 
 query_female <- query_disease_metadata_sorted[which(query_disease_metadata_sorted$Metadata == "female organism"),]
 query_male <- query_disease_metadata_sorted[which(query_disease_metadata_sorted$Metadata == "male organism"),]
