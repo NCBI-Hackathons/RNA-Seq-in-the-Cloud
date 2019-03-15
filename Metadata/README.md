@@ -39,10 +39,12 @@ Then, paste the URL and token into your browser (we recommend using `127.0.0.1`)
 `http://127.0.0.1:8888/?token=53c5dcc8cab1af007ff3a7cabf41201e65771f1846ec75d4`.  
 *Note: If you run this Docker image via ssh on an HPC, server, or virtual machine, paste the IP of the machine it is running on, not `127.0.0.1`.*
 
-In your browser, Jupyter Lab will open and you will see something like:
+In your browser, Jupyter Lab will open and you will see something like:  
+![alt text](jupyterlab-home.png)
 
-You can then navigate to the file you want to interact with:
 
+You can then navigate to the file you want to interact with:  
+![alt text](jupyterlab-notebook.png)
 
 ### Accessing Notebooks via Singularity
 If you do not have root access on your machine, you can also run the same Docker image via Singularity (https://www.sylabs.io/docs/)!
