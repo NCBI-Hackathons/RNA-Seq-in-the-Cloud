@@ -68,6 +68,15 @@ python intronless_exon.py gtf_file.gtf
 ```
 Output: exon_novel_gtf_file.gtf.tsv       (strand-specific*)
         (chr, strand, start of first exon, stop of first exon, strand, transcriptID)
+        
+Alternative: To extract nove transcripts that satisfy: 1) have at least 1 intron, 2) (strand-specific) first exon is not referenced:
+Input: .gtf file, 3) the stop position of the (strand-specific) first exon does not match that of any of the referenced first exons.
+```
+python intronless_exon_endmatch.py gtf_file.gtf
+```
+Output: exon_novel_endmatch_gtf_file.gtf.tsv       (strand-specific*)
+        (chr, strand, start of first exon, stop of first exon, strand, transcriptID)
+
 
 To match the start(stop if anti-strand) positions of the exons outputed from above with a CAGE cluster / extended CAGE cluster:
 ```
