@@ -78,7 +78,7 @@ with open('exon_novel_endmatch_%s.tsv'%gtffile, 'a') as the_file:
         for vv in v:
             if len(vv) >0:
                 vv_end=str(vv).split(',')
-                wr.writerow([k[0],str(vv_end[1]).split(',')[0],str(vv_end[2]).split(',')[0],k[1],str(vv_end).split(';')[1].strip()])
+                wr.writerow([k[0],str(vv_end[1]).split(',')[0],str(vv_end[2]).split(',')[0].replace(')]', ''),k[1],str(vv_end).split(';')[1].strip()])
 
                     
             
