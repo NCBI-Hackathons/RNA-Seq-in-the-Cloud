@@ -106,7 +106,7 @@ def find_introns_in_gtf(input_file_name):
 def find_introns_in_reference_tsv(ref_file_name):
     with gzip.open(path_to_AlignDB_reference + ref_file_name,'rt') as filein:      
         reader = csv.reader(filein, delimiter = '\t')
-        ref_introns_dict = defaultdict(set)
+        ref_introns_dict = defaultdict(list)
         for actual_line in reader:
             if not actual_line[0].startswith('#') or not actual_line[0].startswith('W'):
                 #ref_chrom,ref_transcriptid_unparsed,ref_strand
@@ -132,7 +132,7 @@ def find_introns_in_reference_tsv(ref_file_name):
                         the_introns_key=the_introns_key+"("+str(ref_start_pos)+", "+str(ref_end_pos)+")"
                     else:
                         the_introns_key=the_introns_key+","+ "("+str(ref_start_pos)+", "+str(ref_end_pos)+")"
-                ref_introns_dict[(the_introns_key)].add((ref_chrom,ref_strand))
+                ref_introns_dict[(the_introns_key)].append((ref_chrom,ref_strand))
                 # print("Introns from reference transcripts:")
     return(ref_introns_dict)
 
@@ -143,16 +143,30 @@ def produce_tsv_transcripts_file(intron_dict,reference_intron_dict):
         #print("GTF_Target: "+introns.lstrip(','))
         [chrom, strandedness, tx_id] = tx_info
         for ref_introns,ref_info in reference_intron_dict.items():
-            ref_chrom, ref_strandedness = ref_info
-            if str(chrom) == str(ref_chrom):
-                if str(strandedness) == str(ref_strandedness):
-                    #print("Comparing against ref: "+str(ref_introns))
-                    if introns.lstrip(',') in ref_introns:
+            #print(ref_info)
+            if len(ref_info) > 1:
+                for i in range(len(ref_info)):
+                    #print(ref_info[i])
+                    (ref_chrom, ref_strandedness) = ref_info[i]
+                    #print("GOT EM: "+str(ref_chrom)+str(ref_strandedness))
+                    if str(chrom) == str(ref_chrom):
+                        if str(strandedness) == str(ref_strandedness):
+                            #print("Comparing against ref: "+str(ref_introns))
+                            if introns.lstrip(',') in ref_introns:
+                                resulting_transcripts.append(tx_info)
+            else:
+                [(ref_chrom, ref_strandedness)] = ref_info
+                #print("GOT EM: "+str(ref_chrom)+str(ref_strandedness))
+                if str(chrom) == str(ref_chrom):
+                    if str(strandedness) == str(ref_strandedness):
+                        #print("Comparing against ref: "+str(ref_introns))
+                        if introns.lstrip(',') in ref_introns:
                             resulting_transcripts.append(tx_info)
     return(resulting_transcripts)
 
 the_reference_dictionary = find_introns_in_reference_tsv(reference_tsv_file)
-
+#print("The reference dictionary: ")
+#print(the_reference_dictionary)
 #full_path_to_file = path_to_test_file+filename
 #print("Running on "+filename+"...")
 #split_the_path = full_path_to_file.split("/")
@@ -161,6 +175,9 @@ the_reference_dictionary = find_introns_in_reference_tsv(reference_tsv_file)
 #the_output_file_name =split_the_input_name[0]
 #the_output_file = "novel_transcripts_from_IntronStructure_"+the_output_file_name+".tsv" 
 #the_input_introns_dictionary = find_introns_in_gtf(the_input_file)
+#print("")
+#print("TARGET DICTIONARY: ")
+#print(the_input_introns_dictionary)
 #write_tsv_from_array(produce_tsv_transcripts_file(the_input_introns_dictionary,the_reference_dictionary),output_path+the_output_file)
 
 for filename in glob.iglob(path_to_files+file_chunk+'*.gtf'):
@@ -170,6 +187,10 @@ for filename in glob.iglob(path_to_files+file_chunk+'*.gtf'):
     the_input_file = split_the_path[-1]
     split_the_input_name = str(the_input_file).split(".gtf")
     the_output_file_name =split_the_input_name[0]
+    print(the_input_file)
+    if the_input_file == "SRP009266_A549.gtf":
+        print("Skipped the processed SRP file..."
+        next
     the_output_file = "novel_transcripts_from_IntronStructure_"+the_output_file_name+".tsv" 
     the_input_introns_dictionary = find_introns_in_gtf(the_input_file)
     write_tsv_from_array(
