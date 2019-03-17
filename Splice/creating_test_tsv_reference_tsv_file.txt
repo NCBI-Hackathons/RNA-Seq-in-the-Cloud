@@ -1,0 +1,28 @@
+85:  470  gzip c_small_forced 
+118:  503  gzip c_small_forced 
+260:  645  gzip c_small_forced 
+351:  736  gzip -cd "/home/vkkodali/aligndb_bams/nanopore_alignments.introns.ucsc.tsv.gz" | sed -e '$d' | gzip > "nanopore_alignments.introns.ucsc.tsv.gz"
+354:  739  gzip -cd "/home/vkkodali/aligndb_bams/pacbio_alignments.introns.ucsc.tsv.gz" | sed -e '$d' | gzip > "pacbio_alignments.introns.ucsc.tsv.gz"
+356:  741  gzip -cd "/home/vkkodali/aligndb_bams/tx.AR109_alignments.introns.ucsc.tsv.gz" | sed -e '$d' | gzip > "tx.AR109_alignments.introns.ucsc.tsv.gz"
+363:  748  gzip -cd "/home/vkkodali/aligndb_bams/sra.AR109_alignments.introns.ucsc.tsv.gz" | sed -e '$d' | gzip > "sra.AR109_alignments.introns.ucsc.tsv.gz"
+364:  749  gzip -cd "/home/vkkodali/aligndb_bams/est.AR109_alignments.introns.ucsc.tsv.gz" | sed -e '$d' | gzip > "est.AR109_alignments.introns.ucsc.tsv.gz"
+366:  751  gzcat *.gz | sed '2,${ /^#/d; }' | gzip > combined_references.introns.ucsc.tsv.gz
+367:  752  zcat *.gz | sed '2,${ /^#/d; }' | gzip > combined_references.introns.ucsc.tsv.gz
+369:  754  zcat pacbio_alignments.introns.ucsc.tsv.gz | head -n 3 | gzip > small1.tsv.gz
+373:  758  zcat est.AR109_alignments.introns.ucsc.tsv.gz | head -n 3 | gzip > small2.tsv.gz
+374:  759  zcat tx.AR109_alignments.introns.ucsc.tsv.gz | head -n 3 | gzip > small3.tsv.gz
+382:  767  zcat small*.gz | gzip > c_small.gz
+391:  776  zcat *.gz | gzip > combined_references.introns.ucsc.tsv.gz
+393:  778  zcat *.gz | gzip >> combined_references.introns.ucsc.tsv.gz
+401:  786  zcat tx.AR109_alignments.introns.ucsc.tsv.gz | head -n 3 | gzip > small3.tsv.gz
+404:  789  zcat tx.AR109_alignments.introns.ucsc.tsv.gz | head -n 3 | gzip > small3.tsv.gz
+406:  791  zcat est.AR109_alignments.introns.ucsc.tsv.gz | head -n 3 | gzip > small2.tsv.gz
+407:  792  zcat pacbio_alignments.introns.ucsc.tsv.gz | head -n 3 | gzip > small1.tsv.gz
+411:  796  zcat small*.gz | gzip > c_small.gz
+1000: 1385  history | grep -n "gzip"
+
+c_small_forced contains an 'EXAMPLE' intron structure that will that will result in an output.tsv file that contains a single 'Novel' transcript (if the last few lines are uncommented, the previous chunk of lines are commented to run the program on a single ref-target pair of small files and the filename variable line is uncommented'.
+
+Simply put: to run test case, lines 183-199 should be commented, 168-181 uncommented, 30-31 uncommented,27-28 uncommented and 25-26commented.
+
+
