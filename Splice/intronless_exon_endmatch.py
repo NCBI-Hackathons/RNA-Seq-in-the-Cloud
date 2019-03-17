@@ -1,10 +1,11 @@
 import sys
+import os
 import csv
 from collections import defaultdict
 
 gtffile=sys.argv[1]
 f=open(gtffile , 'r')
-ref_unfiltered_exon_dict=defaultdict(list)
+#ref_unfiltered_exon_dict=defaultdict(list)
 ref_filtered_exon_dict=defaultdict(list)
 final_exon_dict=defaultdict(list)
 
@@ -29,11 +30,12 @@ for i in range (2,(len(fh)-2)):
                 if fh[j].split('\t')[6]=='-':
                     while fh[j].split('\t')[2] == 'exon':
                         j=j+1
-                    if (fh[j-2].split('\t')[2] == 'exon' and fh[j].split('\t')[2] == 'transcript' and fh[j-1].split('\t')[2] == 'exon'):
-                        fieldsx=fh[j].split('\t')
-                        new_key=(fields[0],fields[6],ref1)
-                        ref_filtered_exon_dict[new_key].append((fieldsx[8],int(fieldsx[3]),int(fieldsx[4])))
-                        
+                        if (fh[j-1].split('\t')[2] == 'exon' and fh[j].split('\t')[2] == 'exon' and fh[j+1].split('\t')[2] == 'transcript' \
+                            and fh[j-2].split('\t')):
+                            fieldsx=fh[j].split('\t')
+                            new_key=(fields[0],fields[6],ref1)
+                            ref_filtered_exon_dict[new_key].append((fieldsx[8],int(fieldsx[3]),int(fieldsx[4])))
+                                               
 referenced_exon_dict=defaultdict(list)                  
 not_referenced_exon_dict=defaultdict(list)
 common_exon_dict=defaultdict(list)
@@ -73,7 +75,7 @@ for k, v in not_referenced_exon_dict.items():
 
 the_file=open('exon_novel_endmatch_%s.tsv'%gtffile, 'w')
 with open('exon_novel_endmatch_%s.tsv'%gtffile, 'a') as the_file:
-    wr= csv.writer(the_file,delimiter='\t',escapechar=' ', quoting=csv.QUOTE_NONE)
+    wr= csv.writer(the_file,delimiter='\t',escapechar=' ', quoting=csv.QUOTE_NONE, lineterminator=os.linesep)
     for k,v in final_exon_dict.items():
         for vv in v:
             if len(vv) >0:
