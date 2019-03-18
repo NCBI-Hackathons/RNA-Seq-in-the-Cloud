@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {name}
+spec:
+  parallelism: 1
+  completions: 1
+  backoffLimit: 1
+  template:
+    spec:
+      containers:
+      - name: rnaseq
+        image: us.gcr.io/strides-sra-hackathon-data/rna-seq:v0.6
+        resources:
+          requests:
+            memory: "8Gi"
+            cpu: 12
+          limits:
+            memory: "12Gi"
+        command: ["sh", "-c", "-x", "-e", "-u"]
+        args:
+        - sleep 60; 
+          study="{study}";
+          tissue="{tissue}";
+          runs="{runs}";
+          if gsutil -q stat gs://ncbi_sra_rnaseq/study_gtf/"{study}_{tissue}.gtf"; then echo Already done $study; exit 0; fi;
+          gsutil cp gs://ncbi_sra_rnaseq/refs/GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.harmonized_utrs.gtf .;
+          echo $runs | tr , '\n' | while read acc; do gsutil cp -P -n gs://ncbi_sra_rnaseq/$acc.bam . || continue; 
+            bam=$acc.bam;
+            chrbam=$acc.chr.bam;
+            samtools index $bam;
+            samtools view -h $bam chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22 chrX chrY chrM | samtools view -@8 -Sb - > $chrbam;
+            rm $bam;
+          done;
+          mergedbam="{study}_{tissue}.bam";
+          samtools merge -@6 -f - *.chr.bam | samtools sort -@6 - > $mergedbam;
+          samtools index $mergedbam;
+
+          gtfout="{study}_{tissue}.gtf";
+          stringtie $mergedbam -p 8 -G GCA_000001405.15_GRCh38_full_analysis_set.refseq_annotation.harmonized_utrs.gtf -o $gtfout;
+          echo $mergedbam $gtfout ;
+          gsutil cp $mergedbam $gtfout gs://ncbi_sra_rnaseq/study_gtf/;
+          rm *.bam $gtfout ||:;
+      restartPolicy: OnFailure
