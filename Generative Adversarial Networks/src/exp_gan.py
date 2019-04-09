@@ -45,6 +45,7 @@ from keras import backend as K
 from functools import partial
 import sys
 import argparse
+import tensorflow as tf
 
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
