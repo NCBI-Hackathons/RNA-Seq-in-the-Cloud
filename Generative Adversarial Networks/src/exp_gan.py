@@ -325,12 +325,12 @@ def train(n_epochs, TRAINING_RATIO, BATCH_SIZE, input_file, output_dir):
                 # Still needs some code to display losses from the generator and discriminator,
                 # progress bars, etc.
         print("g_loss =", g_loss, "d_loss =", d_loss)
-        # generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(epoch)))
+        generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(epoch)))
         # save_models(generator_model, discriminator_model, generator, output_dir, epoch)
-        # plotLosses(output_dir, discriminator_loss, generator_loss, epoch)
-    generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(n_epochs)))
+        plotLosses(output_dir, discriminator_loss, generator_loss, epoch)
+    # generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(n_epochs)))
     save_models(generator_model, discriminator_model, generator, output_dir, n_epochs)
-    plotLosses(output_dir, discriminator_loss, generator_loss, n_epochs)
+    # plotLosses(output_dir, discriminator_loss, generator_loss, n_epochs)
 
         
 def generate(model_file, output_file, n_samples):
