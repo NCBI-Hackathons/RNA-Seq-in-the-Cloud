@@ -375,7 +375,7 @@ if __name__ == "__main__":
 
     parser_generate = subparsers.add_parser("generate", help="generate help")
     parser_generate.add_argument("--model_file", required=True, help="model file")
-    parser_generate.add_argument("--n_samples", required=True, help="number of synthetics samples to be generated")
+    parser_generate.add_argument("--n_samples", required=True, help="number of synthetics samples to be generated", type=int)
     parser_generate.add_argument('--output_file', required=True, help='output file')
     parser_generate.set_defaults(func=generate2)
 
