@@ -186,10 +186,10 @@ class RandomWeightedAverage(_Merge):
         return (weights * inputs[0]) + ((1 - weights) * inputs[1])
 
 
-def generate_samples(generator_model, outfile):
+def generate_samples(generator_model, outfile, n_samples=10):
     """Feeds random seeds into the generator and tiles and saves the output to a PNG
     file."""
-    test_sample_stack = generator_model.predict(np.random.rand(10, random_dim))
+    test_sample_stack = generator_model.predict(np.random.rand(n_samples, random_dim))
     np.savetxt(outfile, test_sample_stack, delimiter=",")
 
 
@@ -332,7 +332,7 @@ def train(n_epochs, TRAINING_RATIO, BATCH_SIZE, input_file, output_dir):
         
 def generate(model_file, output_file, n_samples):
     generator_model = load_model(model_file)
-    generate_samples(generator_model, output_file)
+    generate_samples(generator_model, output_file, n_samples)
 
 
 def visualize(model_file, output_file, latent_vector):
