@@ -46,6 +46,8 @@ from functools import partial
 import sys
 import argparse
 
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
 
 # The training ratio is the number of discriminator updates
 # per generator update. The paper uses 5.
