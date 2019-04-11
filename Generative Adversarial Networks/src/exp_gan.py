@@ -214,6 +214,7 @@ def plotLosses(output_dir, dLosses, gLosses, epoch):
 def train(n_epochs, TRAINING_RATIO, BATCH_SIZE, input_file, output_dir):
     # First we load the expression data
     X_train = load_data(input_file)
+    print(X_train.shape)
 
     # input dimension
     input_dimension = X_train.shape[1]
@@ -326,7 +327,7 @@ def train(n_epochs, TRAINING_RATIO, BATCH_SIZE, input_file, output_dir):
                 # progress bars, etc.
         print("g_loss =", g_loss, "d_loss =", d_loss)
         if epoch % 100 == 0:
-            generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(epoch)), 100)
+            generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(epoch)), X_train.shape[0])
             save_models(generator_model, discriminator_model, generator, output_dir, epoch)
             plotLosses(output_dir, discriminator_loss, generator_loss, epoch)
     # generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(n_epochs)))
