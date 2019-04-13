@@ -305,11 +305,13 @@ def train(n_epochs, bookkeeping_interval, TRAINING_RATIO, BATCH_SIZE, input_file
     for epoch in range(n_epochs):
         np.random.shuffle(X_train)
         print("Epoch: ", epoch)
-        n_batches = max(1, int(X_train.shape[0] // (BATCH_SIZE * TRAINING_RATIO)))
+        print("batch size:", BATCH_SIZE)
+        print("training ratio:", TRAINING_RATIO)
+        minibatches_size = BATCH_SIZE * TRAINING_RATIO
+        n_batches = max(1, int(X_train.shape[0] // minibatches_size))
         print("Number of batches: ", n_batches)
         discriminator_loss = []
         generator_loss = []
-        minibatches_size = BATCH_SIZE * TRAINING_RATIO
         for i in range(n_batches):
             discriminator_minibatches = X_train[np.random.randint(0, X_train.shape[0], size=minibatches_size)]
             for j in range(TRAINING_RATIO):
