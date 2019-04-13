@@ -333,7 +333,7 @@ def train(n_epochs, bookkeeping_interval, TRAINING_RATIO, BATCH_SIZE, input_file
             generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(epoch)), X_train.shape[0])
             save_models(generator_model, discriminator_model, generator, output_dir, epoch)
             plotLosses(output_dir, discriminator_loss, generator_loss, epoch)
-    generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(n_epochs)))
+    generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(n_epochs)), X_train.shape[0])
     save_models(generator_model, discriminator_model, generator, output_dir, n_epochs)
     plotLosses(output_dir, discriminator_loss, generator_loss, n_epochs)
 

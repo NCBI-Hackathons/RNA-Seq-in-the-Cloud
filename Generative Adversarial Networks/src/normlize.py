@@ -43,15 +43,16 @@ def discretize(x):
     
 
 def denormalize(args):
-    df=np.loadtxt(args.input_file, delimiter=",", header=None)
+    df=pd.read_csv(args.input_file, header=None)
     print("input:", df.shape)
 
     case_or_control_column = df.columns[-1]
-    case_or_control_series0 = df.loc[case_or_control_column]
+    case_or_control_series0 = df.loc[:, case_or_control_column]
     Xtarget = case_or_control_series0.apply(discretize)
-    X_df = df.drop(case_or_control_column)
-    
-    stats = json.load(args.stats_file)
+    X_df = df.drop(case_or_control_column, axis=1)
+
+    with open(args.stats_file) as f:
+        stats = json.load(f)
     mean = stats["mean"]
     std = stats["std"]
     
