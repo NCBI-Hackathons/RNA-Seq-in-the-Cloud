@@ -211,7 +211,7 @@ def plotLosses(output_dir, dLosses, gLosses, epoch):
     plt.savefig(output_dir + "/images/gan_loss_epoch_" + str(epoch) + ".png")
 
     
-def train(n_epochs, TRAINING_RATIO, BATCH_SIZE, input_file, output_dir):
+def train(n_epochs, bookkeeping_interval, TRAINING_RATIO, BATCH_SIZE, input_file, output_dir):
     # First we load the expression data
     X_train = load_data(input_file)
     print(X_train.shape)
@@ -305,11 +305,12 @@ def train(n_epochs, TRAINING_RATIO, BATCH_SIZE, input_file, output_dir):
     for epoch in range(n_epochs):
         np.random.shuffle(X_train)
         print("Epoch: ", epoch)
-        print("Number of batches: ", int(X_train.shape[0] // BATCH_SIZE))
+        n_batches = max(1, int(X_train.shape[0] // (BATCH_SIZE * TRAINING_RATIO)))
+        print("Number of batches: ", n_batches)
         discriminator_loss = []
         generator_loss = []
         minibatches_size = BATCH_SIZE * TRAINING_RATIO
-        for i in range(int(X_train.shape[0] // (BATCH_SIZE * TRAINING_RATIO))):
+        for i in range(n_batches):
             discriminator_minibatches = X_train[np.random.randint(0, X_train.shape[0], size=minibatches_size)]
             for j in range(TRAINING_RATIO):
                 image_batch = discriminator_minibatches[j * BATCH_SIZE:
@@ -319,20 +320,20 @@ def train(n_epochs, TRAINING_RATIO, BATCH_SIZE, input_file, output_dir):
                     [image_batch, noise],
                     [positive_y, negative_y, dummy_y])
                 discriminator_loss.append(d_loss[0])
-                g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE,
+            g_loss = generator_model.train_on_batch(np.random.rand(BATCH_SIZE,
                                                         random_dim),
                                                         positive_y)
-                generator_loss.append(g_loss[0])
-                # Still needs some code to display losses from the generator and discriminator,
-                # progress bars, etc.
+            generator_loss.append(g_loss[0])
+            # Still needs some code to display losses from the generator and discriminator,
+            # progress bars, etc.
         print("g_loss =", g_loss, "d_loss =", d_loss)
-        if epoch % 100 == 0:
+        if epoch % bookkeeping_interval == 0:
             generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(epoch)), X_train.shape[0])
             save_models(generator_model, discriminator_model, generator, output_dir, epoch)
             plotLosses(output_dir, discriminator_loss, generator_loss, epoch)
-    # generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(n_epochs)))
+    generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(n_epochs)))
     save_models(generator_model, discriminator_model, generator, output_dir, n_epochs)
-    # plotLosses(output_dir, discriminator_loss, generator_loss, n_epochs)
+    plotLosses(output_dir, discriminator_loss, generator_loss, n_epochs)
 
         
 def generate(model_file, output_file, n_samples):
@@ -354,7 +355,7 @@ def train2(args):
     mkdirs(args.output_dir + "/samples")
     mkdirs(args.output_dir + "/images")
     mkdirs(args.output_dir + "/models")
-    train(args.n_epochs, args.training_ratio, args.batch_size, args.input_file, args.output_dir)
+    train(args.n_epochs, args.bookkeeping_interval, args.training_ratio, args.batch_size, args.input_file, args.output_dir)
 
                          
 def generate2(args):
@@ -375,6 +376,7 @@ if __name__ == "__main__":
     parser_train.add_argument('--n_epochs', required=False, type=int, default=100, help='number of epochs')
     parser_train.add_argument('--batch_size', required=False, type=int, default=64, help='batch size')
     parser_train.add_argument('--training_ratio', required=False, type=int, default=5, help='train ratio')
+    parser_train.add_argument('--bookkeeping_interval', required=False, type=int, default=100, help='train ratio')
 
     parser_train.set_defaults(func=train2)
 
