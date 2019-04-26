@@ -186,10 +186,13 @@ class RandomWeightedAverage(_Merge):
         return (weights * inputs[0]) + ((1 - weights) * inputs[1])
 
 
+def generate_noise(size):
+    return np.random.normal(0, 1, size).astype(np.float32) + np.random.poisson(1.0, size).astype(np.float32)
+
 def generate_samples(generator_model, outfile, n_samples=10):
     """Feeds random seeds into the generator and tiles and saves the output to a PNG
     file."""
-    test_sample_stack = generator_model.predict(np.random.rand(n_samples, random_dim))
+    test_sample_stack = generator_model.predict(generate_noise((n_samples, random_dim)))
     np.savetxt(outfile, test_sample_stack, delimiter=",")
 
 
@@ -317,7 +320,7 @@ def train(n_epochs, bookkeeping_interval, TRAINING_RATIO, BATCH_SIZE, input_file
             for j in range(TRAINING_RATIO):
                 image_batch = discriminator_minibatches[j * BATCH_SIZE:
                                                         (j + 1) * BATCH_SIZE]
-                noise = np.random.rand(BATCH_SIZE, random_dim).astype(np.float32)
+                noise = generate_noise((BATCH_SIZE, random_dim))
                 d_loss = discriminator_model.train_on_batch(
                     [image_batch, noise],
                     [positive_y, negative_y, dummy_y])
