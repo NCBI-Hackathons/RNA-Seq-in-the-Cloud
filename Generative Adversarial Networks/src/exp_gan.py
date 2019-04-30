@@ -339,9 +339,9 @@ def train(n_epochs, bookkeeping_interval, TRAINING_RATIO, BATCH_SIZE, random_dim
     plotLosses(output_dir, discriminator_loss, generator_loss, n_epochs)
 
         
-def generate(model_file, output_file, n_samples):
+def generate(model_file, output_file, random_dim, lam, n_samples):
     generator_model = load_model(model_file)
-    generate_samples(generator_model, output_file, n_samples)
+    generate_samples(generator_model, output_file, random_dim, lam, n_samples)
 
 
 def visualize(model_file, output_file, latent_vector):
@@ -362,7 +362,7 @@ def train2(args):
 
                          
 def generate2(args):
-    generate(args.model_file, args.output_file, args.n_samples)
+    generate(args.model_file, args.output_file, args.latent_space_dimension, args.poisson_lambda, args.n_samples)
 
     
 def visualize2(args):
