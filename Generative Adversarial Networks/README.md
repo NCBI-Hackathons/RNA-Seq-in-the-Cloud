@@ -39,7 +39,7 @@ input format: transformed read counts for case and control samples;
 ### Training
 
 ```
-python src/exp_gan.py train --input_file data/test.csv --output_dir=train --n_epoch=500 --batch_size=10 --training_ratio=1
+python src/exp_gan.py train --input_file data/test.csv --output_dir=train --n_epoch=500 --batch_size=10 --training_ratio=1 --bookkeeping_interval 100 --latent_space_dimension 200 --poisson_lambda 1
 ```
 
 ### Generating samples
@@ -47,9 +47,6 @@ python src/exp_gan.py train --input_file data/test.csv --output_dir=train --n_ep
 ```
 python src/exp_gan.py generate --model_file train/models/generator_epoch_499.h5 --output_file output/test.csv --n_samples 10
 ```
-
-### Generating matrices for visualization
-
 
 ## docker
 ### Build 
