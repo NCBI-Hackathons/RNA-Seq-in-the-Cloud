@@ -27,7 +27,6 @@ matplotlib.use("agg")
 
 import matplotlib.pyplot as plt
 from PIL import Image
-
 import argparse
 import os
 import numpy as np
@@ -44,13 +43,11 @@ from keras.datasets import mnist
 from keras import backend as K
 from functools import partial
 import sys
-import argparse
 import tensorflow as tf
 from keras.backend.tensorflow_backend import set_session
 
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
-# config.gpu_options.per_process_gpu_memory_fraction=0.25
 sess = tf.Session(config=config)
 set_session(sess)  # set this TensorFlow session as the default session for Keras
 
