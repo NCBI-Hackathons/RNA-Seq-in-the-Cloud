@@ -46,9 +46,15 @@ from functools import partial
 import sys
 import argparse
 import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
 
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+# config.gpu_options.per_process_gpu_memory_fraction=0.25
+# config.log_device_placement = True  # to log device placement (on which device the operation ran)
+# (nothing gets printed in Jupyter, only if you run it standalone)
+sess = tf.Session(config=config)
+set_session(sess)  # set this TensorFlow session as the default session for Keras
 
 # The training ratio is the number of discriminator updates
 # per generator update. The paper uses 5.
@@ -58,13 +64,10 @@ GRADIENT_PENALTY_WEIGHT = 10  # As per the paper
 # Tired of seeing the same results every time? Remove the line below.
 np.random.seed(1000)
 
-# The results are a little better when the dimensionality of the random vector is only 10.
-# The dimensionality has been left at 200 for consistency with other GAN implementations.
-random_dim = 200
-
 inflate_to_size = 600
 
 disc_internal_size = 200
+
 
 def load_data(input_file):
     df = pd.read_csv(input_file)
@@ -138,7 +141,7 @@ def gradient_penalty_loss(y_true, y_pred, averaged_samples,
     return K.mean(gradient_penalty)
 
 
-def make_generator(input_dimension):
+def make_generator(input_dimension, random_dim):
     """Creates a generator model that takes a 100-dimensional noise vector as a "seed",
     and outputs images of size 28x28x1."""
     inputs = Input(shape=(random_dim,))
@@ -186,13 +189,13 @@ class RandomWeightedAverage(_Merge):
         return (weights * inputs[0]) + ((1 - weights) * inputs[1])
 
 
-def generate_noise(size):
-    return np.random.normal(0, 1, size).astype(np.float32) + np.random.poisson(1.0, size).astype(np.float32)
+def generate_noise(lam, size):
+    return np.random.normal(0, 1, size).astype(np.float32) + np.random.poisson(lam, size).astype(np.float32)
 
-def generate_samples(generator_model, outfile, n_samples=10):
+def generate_samples(generator_model, outfile, random_dim, lam, n_samples=10):
     """Feeds random seeds into the generator and tiles and saves the output to a PNG
     file."""
-    test_sample_stack = generator_model.predict(generate_noise((n_samples, random_dim)))
+    test_sample_stack = generator_model.predict(generate_noise(lam, (n_samples, random_dim)))
     np.savetxt(outfile, test_sample_stack, delimiter=",")
 
 
@@ -214,7 +217,7 @@ def plotLosses(output_dir, dLosses, gLosses, epoch):
     plt.savefig(output_dir + "/images/gan_loss_epoch_" + str(epoch) + ".png")
 
     
-def train(n_epochs, bookkeeping_interval, TRAINING_RATIO, BATCH_SIZE, input_file, output_dir):
+def train(n_epochs, bookkeeping_interval, TRAINING_RATIO, BATCH_SIZE, random_dim, lam, input_file, output_dir):
     # First we load the expression data
     X_train = load_data(input_file)
     print(X_train.shape)
@@ -224,7 +227,7 @@ def train(n_epochs, bookkeeping_interval, TRAINING_RATIO, BATCH_SIZE, input_file
     n_genes = input_dimension - 1
 
     # Now we initialize the generator and discriminator.
-    generator = make_generator(input_dimension)
+    generator = make_generator(input_dimension, random_dim)
     discriminator = make_discriminator(input_dimension)
 
     # The generator_model is used when we want to train the generator layers.
@@ -320,7 +323,7 @@ def train(n_epochs, bookkeeping_interval, TRAINING_RATIO, BATCH_SIZE, input_file
             for j in range(TRAINING_RATIO):
                 image_batch = discriminator_minibatches[j * BATCH_SIZE:
                                                         (j + 1) * BATCH_SIZE]
-                noise = generate_noise((BATCH_SIZE, random_dim))
+                noise = generate_noise(lam, (BATCH_SIZE, random_dim))
                 d_loss = discriminator_model.train_on_batch(
                     [image_batch, noise],
                     [positive_y, negative_y, dummy_y])
@@ -333,10 +336,10 @@ def train(n_epochs, bookkeeping_interval, TRAINING_RATIO, BATCH_SIZE, input_file
             # progress bars, etc.
         print("g_loss =", g_loss, "d_loss =", d_loss)
         if epoch % bookkeeping_interval == 0:
-            generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(epoch)), X_train.shape[0])
+            generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(epoch)), random_dim, lam, X_train.shape[0])
             save_models(generator_model, discriminator_model, generator, output_dir, epoch)
             plotLosses(output_dir, discriminator_loss, generator_loss, epoch)
-    generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(n_epochs)), X_train.shape[0])
+    generate_samples(generator, os.path.join(output_dir, "samples", 'epoch_{}.csv'.format(n_epochs)), random_dim, lam, X_train.shape[0])
     save_models(generator_model, discriminator_model, generator, output_dir, n_epochs)
     plotLosses(output_dir, discriminator_loss, generator_loss, n_epochs)
 
@@ -360,7 +363,7 @@ def train2(args):
     mkdirs(args.output_dir + "/samples")
     mkdirs(args.output_dir + "/images")
     mkdirs(args.output_dir + "/models")
-    train(args.n_epochs, args.bookkeeping_interval, args.training_ratio, args.batch_size, args.input_file, args.output_dir)
+    train(args.n_epochs, args.bookkeeping_interval, args.training_ratio, args.batch_size, args.latent_space_dimension, args.poisson_lambda, args.input_file, args.output_dir)
 
                          
 def generate2(args):
@@ -380,6 +383,10 @@ if __name__ == "__main__":
     parser_train.add_argument('--output_dir', required=True, help='output dir')
     parser_train.add_argument('--n_epochs', required=False, type=int, default=100, help='number of epochs')
     parser_train.add_argument('--batch_size', required=False, type=int, default=64, help='batch size')
+    parser_train.add_argument('--latent_space_dimension', required=False, type=int, default=200, help='latent space dimension')
+    # The results are a little better when the dimensionality of the random vector is only 10.
+    # The dimensionality has been left at 200 for consistency with other GAN implementations.
+    parser_train.add_argument('--poisson_lambda', required=False, type=float, default=1, help='the lambda parameter of the poisson distribution for generating noise for latent space')
     parser_train.add_argument('--training_ratio', required=False, type=int, default=5, help='train ratio')
     parser_train.add_argument('--bookkeeping_interval', required=False, type=int, default=100, help='train ratio')
 
