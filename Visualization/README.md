@@ -32,5 +32,5 @@ sudo docker run -it -v $(pwd):/home/jovyan/work --rm -p 8888:8888 ncbihackathons
 ```
 To run PCA dash app:
 ```bash
-python PCA_dash_app -cd /path/to/results/table.txt -a /path/to/attributes/table.txt -m metadata
+python PCA_dash_app.py -cd /path/to/results/table.txt -a /path/to/attributes/table.txt
 ```
