@@ -13,7 +13,7 @@ https://docs.docker.com/install/*
 
 On your local machine, simply run:
 ```
-sudo docker run -it -v $(pwd):/home/jovyan/work --rm -p 8888:8888 ncbihackathons/metadata-notebook jupyter-lab
+sudo docker run -it -v $(pwd):/home/jovyan/work --rm -p 8888:8888 ncbihackathons/metadata jupyter-lab
 ```
 You must be in the `RNA-Seq-in-the-Cloud` or `RNA-Seq-in-the-Cloud/Metadata` directory.
 
@@ -48,7 +48,7 @@ You can then navigate to the file you want to interact with:
 ### Accessing Notebooks via Singularity
 If you do not have root access on your machine, you can also run the same Docker image via Singularity (https://www.sylabs.io/docs/)!
 ```
-singularity exec docker://ncbihackathons/metadata-notebook jupyter-lab
+singularity exec docker://ncbihackathons/metadata jupyter-lab
 ```
 
 ### Accessing Notebook without Docker or Singulaity

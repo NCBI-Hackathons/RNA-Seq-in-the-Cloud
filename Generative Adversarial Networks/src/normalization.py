@@ -33,7 +33,7 @@ def main():
 		control_f = pd.read_csv(args.control, header=None)
 		max_value = np.log(control_f.values.max())
 		normalize_control_df = control_f.applymap(lambda x: (np.log(x+1)/max_value))
-		normalize_control_df["case_control"] = 0
+		normalize_control_df["case_control"] = 1
 		normalize_control_df.to_csv("normalized_control.csv",index=False)
 
 
