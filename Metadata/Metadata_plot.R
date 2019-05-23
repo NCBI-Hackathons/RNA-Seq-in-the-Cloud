@@ -23,5 +23,4 @@ bp <- ggplot(query_disease_metadata_top10, aes(x = reorder(Metadata, -Proportion
   ggtitle("Metadata available in 10 percent or more of samples") +
   geom_bar(stat = "identity") +
   theme(axis.text.x = element_text(angle = 60, hjust = 1))
-
 bp

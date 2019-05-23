@@ -1,6 +1,9 @@
 from collections import defaultdict
 import json
 import pandas as pd
+import matplotlib
+from matplotlib import pyplot as plt
+import seaborn as sns
 
 def term_to_run(sample_to_terms, term):
 
@@ -98,6 +101,45 @@ def series(term, target_property, sample_to_real_val, sample_to_terms, sample_to
 
     return age_to_samples, df
 
+
+def _create_key_terms(terms, term_name_to_id):
+    term_set = set([
+        term for term in terms
+        if ('UBERON' in term_name_to_id[term]
+        or 'CL' in term_name_to_id[term])
+        and 'CVCL' not in term_name_to_id[term]
+    ])
+    term_set -= set([
+        'male organism',
+        'female organism',
+        'adult organism',
+        'organ'    
+    ])
+    term_set -= set([
+        'cultured cell',
+        'cell',
+        'eukaryotic cell',
+        'animal cell',
+        'native cell'
+    ])
+    """
+    term_set = frozenset([
+        term for term in terms
+        if ('UBERON' in term_name_to_id[term] \
+            and term != 'male organism' \
+            and term != 'female organism' \
+            and term != 'adult organism' \
+            and term != 'organ') or \
+            ('CL' in term_name_to_id[term] \
+            and term != 'cultured cell' \
+            and term != 'cell' \
+            and term != 'eukaryotic cell' \
+            and term != 'animal cell' \
+            and term != 'native cell')
+        ])
+    """
+    return ', '.join(sorted(term_set))
+
 def match_case_to_controls(term, control_samples, case_samples, sample_to_terms, 
     sample_to_study, blacklist_terms, term_name_to_id, sample_to_type, 
     filter_poor=True, filter_cell_line=True, filter_differentiated=True, 
@@ -143,14 +185,20 @@ def match_case_to_controls(term, control_samples, case_samples, sample_to_terms,
         case_samples -= differentiated_samples
 
     # Partition each term into case and control samples
+    control_term_set_to_samples = defaultdict(lambda: set())
+    case_term_set_to_samples = defaultdict(lambda: set())
     for sample in control_samples:
         terms = sample_to_terms[sample]
         for term in terms:
             control_term_to_samples[term].add(sample)
+        key_term_set = _create_key_terms(terms, term_name_to_id)
+        control_term_set_to_samples[key_term_set].add(sample)
     for sample in case_samples:
         terms = sample_to_terms[sample]
         for term in terms:
             case_term_to_samples[term].add(sample)    
+        key_term_set = _create_key_terms(terms, term_name_to_id)
+        case_term_set_to_samples[key_term_set].add(sample)
 
     # Search for confounding variables
     control_confound = set()
@@ -164,20 +212,26 @@ def match_case_to_controls(term, control_samples, case_samples, sample_to_terms,
 
     # Find common variables between case and control
     # identify tissue common variables
-    intersect_terms = set(control_term_to_samples.keys()) \
-        & set(case_term_to_samples.keys())
+    tissue_intersections = set(control_term_set_to_samples.keys()) \
+        & set(case_term_set_to_samples.keys())
     term_to_partition = {}
-    tissue_intersections = set()
-    for term in intersect_terms:
-        term_id = term_name_to_id[term]
-        if 'UBERON' in term_id \
-            and term != 'male organism' \
-            and term != 'female organism' \
-            and term != 'adult organism':
-            tissue_intersections.add(term)
-        term_to_partition[term] = {
-            'case': list(case_term_to_samples[term]),
-            'control': list(control_term_to_samples[term])
+    for term_set in tissue_intersections:
+        #term_id = term_name_to_id[term]
+        #if ('UBERON' in term_id \
+        #    and term != 'male organism' \
+        #    and term != 'female organism' \
+        #    and term != 'adult organism' \
+        #    and term != 'organ') or \
+        #    ('CL' in term_id \
+        #    and term != 'cultured cell' \
+        #    and term != 'cell' \
+        #    and term != 'eukaryotic cell' \
+        #    and term != 'animal cell' \
+        #    and term != 'native cell'):
+        #    tissue_intersections.add(term)
+        term_to_partition[term_set] = {
+            'case': list(case_term_set_to_samples[term_set]),
+            'control': list(control_term_set_to_samples[term_set])
         }
 
     da = []
@@ -246,6 +300,89 @@ def match_case_to_controls(term, control_samples, case_samples, sample_to_terms,
 def select_case_control_experiment_set(df, case_control, term):
     return list(df.loc[(df['condition'] == case_control) & (df['type'] == term), 'experiment'])
 
+def create_summary_plots(df):
+    # The labels can be very long. We need to get
+    # the maximum length to figure out a good height
+    # for the plots.
+    types = df['type'].unique()
+    max_len = max([len(x) for x in types])
+    
+    grouped = df.groupby(by='type')
+    da_n_studies = []
+    for name, group in grouped:
+        da_n_studies.append((
+            name, len(group.loc[(df['condition'] == 'case')]['project'].unique()), 'case'
+        ))
+        da_n_studies.append((
+            name, len(group.loc[(df['condition'] == 'control')]['project'].unique()), 'control'
+        ))
+    df_n_studies = pd.DataFrame(
+        data=da_n_studies,
+        columns=[
+            'Tissue/Cell type',
+            'Number of studies',
+            'Condition'
+        ]
+    )
+    fig, axarr = plt.subplots(
+        1,
+        2,
+        sharey=False,
+        figsize=(3*0.9*len(df_n_studies['Tissue/Cell type'].unique()), (max_len/13)+2.5)
+    )
+    
+    sns.barplot(data=df_n_studies, x='Tissue/Cell type', y='Number of studies', hue='Condition', ax=axarr[0])
+    axarr[0].set_title('Number of studies\nper tissue/cell type')
+    axarr[0].legend(
+        loc='center left',
+        bbox_to_anchor=(1, 0.5)
+    )
+    for p in axarr[0].patches:
+        height = p.get_height()
+        y_lim = axarr[0].get_ylim()[1]
+        axarr[0].text(
+            p.get_x() + 0.25 * p.get_width(),
+            height + 0.015 * y_lim,
+            '%d' % height,
+            fontsize=9
+        )
+    plt.setp(axarr[0].xaxis.get_majorticklabels(), rotation=90)
+    
+    
+    da_n_samples = []
+    for name, group in grouped:
+        da_n_samples.append((
+            name, len(group.loc[(df['condition'] == 'case')]), 'case'
+        ))
+        da_n_samples.append((
+            name, len(group.loc[(df['condition'] == 'control')]), 'control'
+        ))
+    df_n_samples = pd.DataFrame(
+        data=da_n_samples,
+        columns=[
+            'Tissue/Cell type',
+            'Number of samples',
+            'Condition'
+        ]
+    )
+    sns.barplot(data=df_n_samples, x='Tissue/Cell type', y='Number of samples', hue='Condition', ax=axarr[1])
+    axarr[1].set_title('Number of samples\nper tissue/cell type')
+    axarr[1].legend(
+        loc='center left',
+        bbox_to_anchor=(1, 0.5)
+    )
+    for p in axarr[1].patches:
+        height = p.get_height()
+        y_lim = axarr[1].get_ylim()[1]
+        axarr[1].text(
+            p.get_x() + 0.25 * p.get_width(),
+            height + 0.015 * y_lim,
+            '%d' % height,
+            fontsize=9
+        )
+    plt.setp(axarr[1].xaxis.get_majorticklabels(), rotation=90)
+    plt.tight_layout()
+    
 def main():
     with open('./data/experiment_to_terms.json', 'r') as f:
         sample_to_terms = json.load(f)
@@ -253,7 +390,8 @@ def main():
     with open('./data/term_name_to_id.json', 'r') as f:
         term_name_to_id = json.load(f)
 
-    with open('./data/experiments_in_hackathon_data.json', 'r') as f:
+    #with open('./data/experiments_in_hackathon_data.json', 'r') as f:
+    with open('./data/my_available_exps.json', 'r') as f:
         available = set(json.load(f))
 
     with open('./data/experiment_to_type.json', 'r') as f:
@@ -268,7 +406,7 @@ def main():
     with open('./data/experiment_to_runs.json', 'r') as f:
         sample_to_runs = json.load(f)
 
-    filter_available = True
+    filter_available = False
     if filter_available:
         sample_to_terms = {
             k:v for k,v in sample_to_terms.items()
@@ -307,20 +445,24 @@ def main():
     print('Tissue intersections: %s' % tissue_intersections)
     """
 
-    term = 'glioblastoma multiforme' # A good one
+    #term = 'glioblastoma multiforme' # A good one
+    #term = 'systemic lupus erythematosus'
+    term = 'breast cancer'
     case, control = term_to_run(sample_to_terms, term)
     blacklist_terms = set(['disease', 'disease of cellular proliferation'])
     r = match_case_to_controls(term, control, case, sample_to_terms,
         sample_to_study, blacklist_terms, term_name_to_id, sample_to_type,
         filter_poor=True, filter_cell_line=True, filter_differentiated=True,
-        sample_to_runs=sample_to_runs, by_run=True)
+        sample_to_runs=sample_to_runs, by_run=False)
     df = r[0]
     control_confound = r[1]
     case_confound = r[2]
     tissue_intersections = r[3]
-    df.to_csv('glioblastoma_multiforme_case_control.csv')
+    #df.to_csv('glioblastoma.tsv', sep='\t')
+    df.to_csv('breast_cancer.tsv', sep='\t')
     print(df)
     #print(df.loc[(df['type'] == 'brain')])
+    #print(df.loc[(df['type'] == 'brain') & (df['condition'] == 'control')])
     #print('Tissue intersections: %s' % tissue_intersections)
     #print(select_case_control_experiment_set(df, 'case', 'blood'))
 
