@@ -138,8 +138,9 @@ def _create_key_terms(terms, term_name_to_id):
             and term != 'native cell')
         ])
     """
-    return ', '.join(sorted(term_set))
-
+    return ','.join(sorted(term_set))
+    
+    
 def match_case_to_controls(term, control_samples, case_samples, sample_to_terms, 
     sample_to_study, blacklist_terms, term_name_to_id, sample_to_type, 
     filter_poor=True, filter_cell_line=True, filter_differentiated=True, 
@@ -297,9 +298,20 @@ def match_case_to_controls(term, control_samples, case_samples, sample_to_terms,
         ])
     return df, control_confound, case_confound, tissue_intersections
 
+
 def select_case_control_experiment_set(df, case_control, term):
     return list(df.loc[(df['condition'] == case_control) & (df['type'] == term), 'experiment'])
 
+
+def create_series_plots(val_to_samples, target_property):
+    df = pd.DataFrame(data=[(k,len(v)) for k,v in val_to_samples.items()], columns=[target_property, 'Number of samples'])
+    df.sort_values(target_property)
+    plt.figure(figsize=(0.2*len(df),5.0))
+    sns.barplot(x=target_property, y="Number of samples", data=df)
+    plt.tight_layout()
+    plt.show()
+
+    
 def create_summary_plots(df):
     # The labels can be very long. We need to get
     # the maximum length to figure out a good height
@@ -328,7 +340,7 @@ def create_summary_plots(df):
         1,
         2,
         sharey=False,
-        figsize=(3*0.9*len(df_n_studies['Tissue/Cell type'].unique()), (max_len/13)+2.5)
+        figsize=(3*0.9*len(df_n_studies['Tissue/Cell type'].unique()), max_len/13+2.5)
     )
     
     sns.barplot(data=df_n_studies, x='Tissue/Cell type', y='Number of studies', hue='Condition', ax=axarr[0])
@@ -340,12 +352,17 @@ def create_summary_plots(df):
     for p in axarr[0].patches:
         height = p.get_height()
         y_lim = axarr[0].get_ylim()[1]
+        if height > 1000:
+            x_offset = -0.1* p.get_width()
+        else:
+            x_offset = 0.1 * p.get_width()
         axarr[0].text(
-            p.get_x() + 0.25 * p.get_width(),
+            p.get_x() + x_offset,
             height + 0.015 * y_lim,
             '%d' % height,
             fontsize=9
         )
+    axarr[0].set_ylim(0, axarr[0].get_ylim()[1] + 0.05*axarr[0].get_ylim()[1])
     plt.setp(axarr[0].xaxis.get_majorticklabels(), rotation=90)
     
     
@@ -374,15 +391,58 @@ def create_summary_plots(df):
     for p in axarr[1].patches:
         height = p.get_height()
         y_lim = axarr[1].get_ylim()[1]
+        if height > 1000:
+            x_offset = -0.1* p.get_width()
+        else:
+            x_offset = 0.1 * p.get_width()
         axarr[1].text(
-            p.get_x() + 0.25 * p.get_width(),
+            p.get_x() + x_offset,
             height + 0.015 * y_lim,
             '%d' % height,
             fontsize=9
         )
+    axarr[1].set_ylim(0, axarr[1].get_ylim()[1] + 0.015*axarr[1].get_ylim()[1])
     plt.setp(axarr[1].xaxis.get_majorticklabels(), rotation=90)
     plt.tight_layout()
     
+    
+def load_metadata(available_data_f=None):
+    experiment_to_terms_f_json = './data/experiment_to_terms.json'
+    term_name_to_id_f = './data/term_name_to_id.json'
+    #available_data_f = './data/experiments_in_hackathon_data.json'
+    experiment_to_study_f = './data/experiment_to_study.json'
+    experiment_to_real_value_terms_f = './data/experiment_to_real_value_terms.json'
+    experiment_to_runs_f = './data/experiment_to_runs.json'
+    experiment_to_type_f = './data/experiment_to_type.json'
+
+    with open(experiment_to_terms_f_json, 'r') as f:
+        sample_to_terms = json.load(f)    
+    with open(term_name_to_id_f, 'r') as f:
+        term_name_to_id = json.load(f)
+    with open(experiment_to_type_f, 'r') as f:
+        sample_to_type = json.load(f)
+    with open(experiment_to_study_f, 'r') as f:
+        sample_to_study = json.load(f)
+    with open(experiment_to_real_value_terms_f, 'r') as f:
+        sample_to_real_val = json.load(f)
+    with open(experiment_to_runs_f, 'r') as f:
+        sample_to_runs = json.load(f)    
+    if available_data_f:
+        with open(available_data_f, 'r') as f:
+            available = set(json.load(f))
+        sample_to_terms = {
+            k:v for k,v in sample_to_terms.items()  
+            if k in available
+        }    
+    return (
+        sample_to_terms,
+        term_name_to_id,
+        sample_to_type,
+        sample_to_study,
+        sample_to_runs,
+        sample_to_real_val
+    )
+
 def main():
     with open('./data/experiment_to_terms.json', 'r') as f:
         sample_to_terms = json.load(f)
