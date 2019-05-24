@@ -1,8 +1,6 @@
-# RNA-Seq-in-the-Cloud
+# RNAMunger: A Toolset for Public RNA-seq Data Analysis
 
 ## Please cite our work -- (citation)
-
-## An Indexing System for All Public RNAseq Data.  An Attached User Interface!
 
 ### Please Scroll down for TOC
 
@@ -25,7 +23,7 @@ The Docker image contains <this software> as well as a webserver and FTP server 
 
 ## Contents
 
-### Metadata Binning Workflow
+### Query Matched Case-Control Samples in the Sequence Read Archive
 
 ![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Screen%20Shot%202019-03-13%20at%203.32.45%20PM.png?raw=true "Title")
 
@@ -33,7 +31,7 @@ The Docker image contains <this software> as well as a webserver and FTP server 
 
 ![Alt text](https://raw.githubusercontent.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/master/Generative%20Adversarial%20Networks/GAN_pipeline.tiff?raw=true "Title")
 
-### Visualization of RNAseq Analyses
+### Visualization of RNA-seq Analyses
 
 ![Alt text](https://github.com/NCBI-Hackathons/RNA-Seq-in-the-Cloud/blob/master/Visualization/3D_pca.PNG?raw=true "Title")
 
